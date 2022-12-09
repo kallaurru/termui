@@ -6,6 +6,7 @@ package termui
 
 import (
 	"fmt"
+	"image"
 	"math"
 	"reflect"
 
@@ -227,4 +228,86 @@ func BuildCellWithXArray(cells []Cell) []CellWithX {
 		index += rw.RuneWidth(cell.Rune)
 	}
 	return cellWithXArray
+}
+
+// ConvWidthRelativeToAbs - цели: значения размеров указанных как -1 или 0.
+// Такие размеры являются относительными
+// -1 - такая ячейка займет все не размеченное пространство, если их несколько то будет их делить
+//      поровну с остальными такими же
+//  0 - размер такой колонки определиться по длине текста в первой строке
+// Размер size и data должны совпадать
+// Если возникают какие-то ошибки возвращается массив с "резиновыми" значениями
+func ConvWidthRelativeToAbs(minX, maxX int, size []int, row []string) []int {
+	// определяем количество колонок
+	cols := len(row)
+	// длина по x для всех колонок с относительным размером
+	length := maxX - minX - (cols - 1)
+	countRubber := 0
+
+	for idx, s := range size {
+		if s > 0 {
+			// обычный размер
+			length -= s
+			continue
+		}
+		if s <= -1 {
+			countRubber++
+			continue
+		}
+		if s == 0 {
+			colLen := len(row[idx])
+			size[idx] = colLen
+			length -= colLen
+		}
+	}
+
+	if countRubber > 0 {
+		rubberSize := length / countRubber
+		diff := length - (rubberSize * countRubber)
+		for idx, s := range size {
+			if s <= -1 {
+				if diff == 0 {
+					size[idx] = rubberSize
+				} else {
+					size[idx] = rubberSize + diff
+					diff = 0
+				}
+			}
+		}
+	}
+
+	return size
+}
+
+// MakeCenterPositionWidget - расчет позиционирования виджета по середине родительского фрейма
+// maxX, maxY - размеры
+func MakeCenterPositionWidget(parent image.Rectangle, wData, hData int) image.Rectangle {
+	x0, x1, y0, y1 := 0, 0, 0, 0
+	// если ширина данных превышает или равна родительскому фрейму, убираем по единице с каждой стороны
+	diffX := parent.Max.X - parent.Min.X - wData
+	diffY := parent.Max.Y - parent.Min.Y - hData
+
+	if diffX <= 0 {
+		x0 = parent.Min.X + 1
+		x1 = parent.Max.X - 1
+	} else {
+		x2 := (parent.Max.X - parent.Min.X) / 2
+		wData2 := wData / 2
+		diffW := wData - wData2 - wData2
+		x0 = x2 - wData2
+		x1 = x2 + wData2 + diffW
+	}
+
+	if diffY <= 0 {
+		y0 = parent.Min.Y + 1
+		y1 = parent.Max.Y - 1
+	} else {
+		y2 := (parent.Max.Y - parent.Min.Y) / 2
+		hData2 := hData / 2
+		diffH := hData - hData2 - hData2
+		y0 = y2 - hData2
+		y1 = y2 + hData2 + diffH
+	}
+
+	return image.Rect(x0, y0, x1, y1)
 }
