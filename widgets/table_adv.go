@@ -2,7 +2,6 @@ package widgets
 
 import (
 	. "github.com/kallaur/termui/v3"
-	uuid "github.com/satori/go.uuid"
 	"image"
 )
 
@@ -14,7 +13,6 @@ type ATable struct {
 	ColTextAlignment map[int]Alignment
 	maxColIdx        int
 	useCellAlignment bool
-	id               string
 	callerUniqKey    func(idxRow, idxCol, idxMaxCol int) int
 }
 
@@ -30,7 +28,6 @@ func NewATable() *ATable {
 		WidgetTheme:      NewDefWidgetTheme(),
 		maxColIdx:        0,
 		useCellAlignment: false,
-		id:               uuid.NewV4().String(),
 		callerUniqKey: func(idxRow, idxCol, idxMaxCol int) int {
 			return idxRow*idxMaxCol + idxCol + 1
 		},

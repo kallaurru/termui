@@ -53,7 +53,7 @@ func (self *Canvas) GetCells() map[image.Point]Cell {
 }
 
 func line(p0, p1 image.Point) []image.Point {
-	points := []image.Point{}
+	var points []image.Point
 
 	leftPoint, rightPoint := p0, p1
 	if leftPoint.X > rightPoint.X {

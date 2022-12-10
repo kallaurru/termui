@@ -10,21 +10,21 @@ type WidgetTheme struct {
 }
 
 //GetTitleStyle - получить стиль заголовка
-func (ft *WidgetTheme) GetTitleStyle(isActive bool) Style {
+func (wt *WidgetTheme) GetTitleStyle(isActive bool) Style {
 	if isActive {
-		return ft.activeTitleStyle
+		return wt.activeTitleStyle
 	}
 
-	return ft.titleStyle
+	return wt.titleStyle
 }
 
 //GetBorderStyle - получить стиль линии обводки
-func (ft *WidgetTheme) GetBorderStyle(isActive bool) Style {
+func (wt *WidgetTheme) GetBorderStyle(isActive bool) Style {
 	if isActive {
-		return ft.activeBorderStyle
+		return wt.activeBorderStyle
 	}
 
-	return ft.borderStyle
+	return wt.borderStyle
 }
 
 func NewDefWidgetTheme() *WidgetTheme {
