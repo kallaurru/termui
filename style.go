@@ -18,6 +18,7 @@ const (
 	ColorMagenta Color = 5
 	ColorCyan    Color = 6
 	ColorWhite   Color = 7
+	Color23      Color = 23
 )
 
 type Modifier uint

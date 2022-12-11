@@ -311,3 +311,57 @@ func MakeCenterPositionWidget(parent image.Rectangle, wData, hData int) image.Re
 
 	return image.Rect(x0, y0, x1, y1)
 }
+
+func CalcRelativeHeight(rows uint8, sizes ...uint8) ([]uint8, bool) {
+	const max uint8 = 100
+	var (
+		allCounter uint8 = 0
+		defEmpty   uint8 = 0
+		defAll           = max / rows
+		ok               = false
+	)
+
+	out := make([]uint8, 0, int(rows))
+	if len(sizes) == 0 {
+		for i := 0; i < int(rows); i++ {
+			out[i] = defAll
+			allCounter += defAll
+		}
+	} else {
+		maxIdx := int(rows) - 1
+		// если хоть какие-то длины заполнены
+		for i := 0; i < int(rows); i++ {
+			if i <= maxIdx {
+				// если длина не больше max заносим в массив
+				val := sizes[i]
+				if val > max {
+					// прекращаем цикл, размеры указаны не верно
+					// что бы подстраховаться от переполнения отправляем 101
+					allCounter = max + 1
+					break
+				}
+			} else {
+				if defEmpty == 0 {
+					rem := rows - uint8(i) - 1
+					if rem == 0 {
+						allCounter = max + 1
+						break
+					}
+					defEmpty = (max - allCounter) / rem
+				}
+				out[i] = defEmpty
+			}
+		}
+	}
+	if allCounter <= max {
+		ok = true
+	}
+
+	if allCounter < max {
+		diff := max - allCounter
+		last := int(rows) - 1
+		out[last] += diff
+	}
+
+	return out, ok
+}
