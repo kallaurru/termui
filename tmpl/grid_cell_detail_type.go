@@ -2,14 +2,6 @@ package tmpl
 
 import . "github.com/kallaur/termui/v3"
 
-const (
-	CellSizePercent30       uint8 = 30
-	CellSizePercentile      uint8 = 25
-	CellSizeTwoPercentile   uint8 = 50
-	CellSizeThreePercentile uint8 = 75
-	CellSizeFull            uint8 = 100
-)
-
 type CellDetail struct {
 	idx  uint16   // индекс колонки
 	size uint8    // число не более 10 включительно

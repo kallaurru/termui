@@ -1,24 +1,20 @@
 package main
 
 import (
-	"github.com/kallaur/termui/v3"
-	"github.com/kallaur/termui/v3/tmpl"
+	. "github.com/kallaur/termui/v3"
 	"log"
 )
 
 func main() {
 	var (
-		rows uint8 = 3
+		rows uint8 = 5
 	)
 
-	l, ok := termui.CalcRelativeHeight(
+	l := CalcRelativeHeight(
 		rows,
-		tmpl.NewAdaptiveSizeMin(),
-		tmpl.NewAdaptiveSizeTwoPercentile())
-	if !ok {
-		log.Println("No calc relative height")
-		return
-	}
+		NewAdaptiveSizeMin(),
+		NewAdaptiveSizeTwoPercentile())
+
 	if len(l) != int(rows) {
 		log.Println("No equals count")
 	}

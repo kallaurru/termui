@@ -6,7 +6,6 @@ package termui
 
 import (
 	"fmt"
-	"github.com/kallaur/termui/v3/tmpl"
 	"image"
 	"math"
 	"reflect"
@@ -313,59 +312,56 @@ func MakeCenterPositionWidget(parent image.Rectangle, wData, hData int) image.Re
 	return image.Rect(x0, y0, x1, y1)
 }
 
-func CalcRelativeHeight(rows uint8, sizes ...tmpl.AdaptiveSize) ([]tmpl.AdaptiveSize, bool) {
-	max := tmpl.NewAdaptiveSizeMax()
+// CalcRelativeHeight - расcчитываем относительные высоты строк. Общая сумма не должна превышать
+// tmpl.AdaptiveSize.Max()
+func CalcRelativeHeight(rows uint8, sizes ...AdaptiveSize) []AdaptiveSize {
+	var counter, tail uint8 = 0, 0
 
-	out := make([]tmpl.AdaptiveSize, 0, int(rows))
+	undefined := int(rows) - len(sizes)
+	defUndef := 0
+
+	max := NewAdaptiveSizeMax()
+	out := make([]AdaptiveSize, int(rows), int(rows))
 
 	if len(sizes) == 0 {
 		def := max.ToUint8() / rows
 		diff := max.ToUint8() - (def * rows)
 		for i := 0; i < int(rows); i++ {
-			out[i] = tmpl.NewAdaptiveSize(int(def))
+			out[i] = NewAdaptiveSize(int(def))
 		}
 		if diff > 0 {
-			out[int(rows-1)] = tmpl.NewAdaptiveSize(int(def + diff))
+			out[int(rows-1)] = NewAdaptiveSize(int(def + diff))
 		}
 
-		return out, true
+		return out
 	}
 
 	maxDefinedIdx := len(sizes) - 1
 
-	maxIdx := int(rows) - 1
-	// если хоть какие-то длины заполнены
+	// возможно не полное заполнение массива размеров
 	for i := 0; i < int(rows); i++ {
-		if i <= maxIdx {
-			// если длина не больше max заносим в массив
-			val := sizes[i]
-			if val > max {
-				// прекращаем цикл, размеры указаны не верно
-				// что бы подстраховаться от переполнения отправляем 101
-				allCounter = max + 1
+		if i <= maxDefinedIdx {
+			s := sizes[i]
+			out[i] = s
+			counter += s.ToUint8()
+			continue
+		}
+		if tail == 0 {
+			tail = max.ToUint8() - counter
+			if undefined == 1 {
+				out[i] = NewAdaptiveSize(int(tail))
 				break
 			}
-		} else {
-			if defEmpty == 0 {
-				rem := rows - uint8(i) - 1
-				if rem == 0 {
-					allCounter = max + 1
-					break
-				}
-				defEmpty = (max - allCounter) / rem
-			}
-			out[i] = defEmpty
+			defUndef = int(tail) / undefined
 		}
-	}
-	if allCounter <= max {
-		ok = true
-	}
-
-	if allCounter < max {
-		diff := max - allCounter
-		last := int(rows) - 1
-		out[last] += diff
+		out[i] = NewAdaptiveSize(defUndef)
+		counter += uint8(defUndef)
 	}
 
-	return out, ok
+	if counter < max.ToUint8() {
+		diff := max.ToUint8() - counter
+		out[int(rows)-1] = NewAdaptiveSize(defUndef + int(diff))
+	}
+
+	return out
 }
