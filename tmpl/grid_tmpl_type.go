@@ -16,11 +16,25 @@ type GridTmpl struct {
 }
 
 func NewGridTmpl(rCount uint8, rSize ...AdaptiveSize) *GridTmpl {
+	var s []AdaptiveSize
+	if len(rSize) == 0 {
+		s = make([]AdaptiveSize, 1, 1)
+		s[0] = NewAdaptiveSizeMax()
+	} else {
+		s = make([]AdaptiveSize, 0, len(rSize))
+		s = append(s, rSize...)
+	}
 
-	return nil
+	return &GridTmpl{
+		rows:  rCount,
+		sizes: s,
+		cells: make(map[uint16]*CellDetail),
+	}
 }
 
 // AddCell - индексация строк и столбцов начинается с 0
-func (gt *GridTmpl) AddCell(row, col, size AdaptiveSize, widget Drawable) uint8 {
+func (gt *GridTmpl) AddCell(row, col uint8, size AdaptiveSize, widget Drawable) uint8 {
+	detail := NewCellDetail(row, col, size, widget)
+	gt.cells[detail.idx] = detail
 	return CellTmplAdded
 }

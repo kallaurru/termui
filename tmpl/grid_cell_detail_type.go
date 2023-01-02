@@ -3,20 +3,16 @@ package tmpl
 import . "github.com/kallaur/termui/v3"
 
 type CellDetail struct {
-	idx  uint16   // индекс колонки
-	size uint8    // число не более 10 включительно
+	idx  uint16 // индекс колонки
+	size AdaptiveSize
 	draw Drawable // виджет который там должен находится
 }
 
-func NewCellDetail(row, col, size uint8, widget Drawable) *CellDetail {
+func NewCellDetail(row, col uint8, size AdaptiveSize, widget Drawable) *CellDetail {
 	cd := &CellDetail{
 		idx:  0,
-		size: 0, // не более 100
+		size: size, // не более 100
 		draw: widget,
-	}
-
-	if size > 100 {
-		return nil
 	}
 	cd.makeCellAddr(row, col)
 
