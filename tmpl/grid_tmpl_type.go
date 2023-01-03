@@ -1,6 +1,8 @@
 package tmpl
 
-import . "github.com/kallaur/termui/v3"
+import (
+	. "github.com/kallaur/termui/v3"
+)
 
 const (
 	CellTmplAdded     uint8 = 0x00
@@ -10,9 +12,10 @@ const (
 )
 
 type GridTmpl struct {
-	rows  uint8          // количество строк в шаблоне
-	sizes []AdaptiveSize // высоты строк
-	cells map[uint16]*CellDetail
+	count uint8                  // количество строк в шаблоне
+	sizes []AdaptiveSize         // высоты строк
+	rows  map[uint8]GridItem     // элемент шаблона
+	rs    map[uint8]AdaptiveSize // записываем размер колонок в строке
 }
 
 func NewGridTmpl(rCount uint8, rSize ...AdaptiveSize) *GridTmpl {
@@ -26,9 +29,10 @@ func NewGridTmpl(rCount uint8, rSize ...AdaptiveSize) *GridTmpl {
 	}
 
 	return &GridTmpl{
-		rows:  rCount,
+		count: rCount,
 		sizes: s,
-		cells: make(map[uint16]*CellDetail),
+		rows:  make(map[uint8]GridItem),
+		rs:    make(map[uint8]AdaptiveSize),
 	}
 }
 
@@ -37,4 +41,10 @@ func (gt *GridTmpl) AddCell(row, col uint8, size AdaptiveSize, widget Drawable) 
 	detail := NewCellDetail(row, col, size, widget)
 	gt.cells[detail.idx] = detail
 	return CellTmplAdded
+}
+
+func (gt *GridTmpl) BuildGrid() *Grid {
+	grid := NewGrid()
+
+	return grid
 }
