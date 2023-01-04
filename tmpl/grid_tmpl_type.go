@@ -36,11 +36,15 @@ func NewGridTmpl(rCount uint8, rSize ...AdaptiveSize) *GridTmpl {
 	}
 }
 
-// AddCell - индексация строк и столбцов начинается с 0
-func (gt *GridTmpl) AddCell(row, col uint8, size AdaptiveSize, widget Drawable) uint8 {
+// AddSimpleCell - индексация строк и столбцов начинается с 0
+func (gt *GridTmpl) AddSimpleCell(row, col uint8, size AdaptiveSize, widget Drawable) uint8 {
 	detail := NewCellDetail(row, col, size, widget)
 	gt.cells[detail.idx] = detail
 	return CellTmplAdded
+}
+
+func (gt *GridTmpl) AddComplexCell(row, col uint8, item ...GridItem) uint8 {
+
 }
 
 func (gt *GridTmpl) BuildGrid() *Grid {

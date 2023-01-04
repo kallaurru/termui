@@ -3,9 +3,10 @@ package tmpl
 import . "github.com/kallaur/termui/v3"
 
 type CellDetail struct {
-	idx  uint16 // индекс колонки
-	size AdaptiveSize
-	draw Drawable // виджет который там должен находится
+	idx   uint16 // индекс колонки
+	sizeV bool
+	size  AdaptiveSize
+	draw  Drawable // виджет который там должен находится
 }
 
 func NewCellDetail(row, col uint8, size AdaptiveSize, widget Drawable) *CellDetail {
