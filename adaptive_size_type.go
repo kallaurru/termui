@@ -57,3 +57,26 @@ func (as AdaptiveSize) ToInt() int {
 func (as AdaptiveSize) ToUint8() uint8 {
 	return uint8(as)
 }
+
+func (as AdaptiveSize) FloatSize() float64 {
+	res := float64(as) / float64(adaptiveSizeMax)
+	if res > 1 {
+		return 0.0
+	}
+
+	return float64(as) / float64(adaptiveSizeMax)
+}
+
+func (as AdaptiveSize) Sum(num AdaptiveSize) AdaptiveSize {
+	sum := int(as) + int(num)
+	if sum <= adaptiveSizeMax {
+		return AdaptiveSize(sum)
+	}
+	diff := adaptiveSizeMax - sum
+
+	return AdaptiveSize(diff)
+}
+
+func (as AdaptiveSize) IsMax() bool {
+	return as == NewAdaptiveSizeMax()
+}
