@@ -3,10 +3,9 @@ package tmpl
 import . "github.com/kallaur/termui/v3"
 
 type CellDetail struct {
-	idx   uint16 // индекс колонки
-	sizeV bool
-	size  AdaptiveSize
-	draw  Drawable // виджет который там должен находится
+	idx  uint16 // индекс колонки
+	size AdaptiveSize
+	draw Drawable // виджет который там должен находится
 }
 
 func NewCellDetail(row, col uint8, size AdaptiveSize, widget Drawable) *CellDetail {
@@ -25,9 +24,7 @@ func (cd *CellDetail) getIdx() uint16 {
 }
 
 func (cd *CellDetail) getSize() float64 {
-	base := 100
-
-	return float64(cd.size) / float64(base)
+	return cd.size.FloatSize()
 }
 
 func (cd *CellDetail) makeCellAddr(row uint8, col uint8) {
