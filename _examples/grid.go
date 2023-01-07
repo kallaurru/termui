@@ -11,8 +11,8 @@ import (
 	"math"
 	"time"
 
-	ui "github.com/kallaur/termui/v3"
-	"github.com/kallaur/termui/v3/widgets"
+	ui "github.com/kallaurru/termui/v3"
+	"github.com/kallaurru/termui/v3/widgets"
 )
 
 func main() {

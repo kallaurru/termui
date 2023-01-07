@@ -2,7 +2,7 @@ package tmpl
 
 import (
 	"container/list"
-	. "github.com/kallaur/termui/v3"
+	. "github.com/kallaurru/termui/v3"
 )
 
 /** Весь макет делим на строки, далее в ячейках могут быть вложенные схемы */
@@ -36,10 +36,6 @@ func (gs *GridSchema) AddCell(row uint8, cd *CellDetail) {
 	gs.addCell(row, cd)
 }
 
-func (gs *GridSchema) AddCellSchema(row uint8, grdS *GridSchema) {
-	gs.addCell(row, grdS)
-}
-
 // Build - по количеству строк в схеме
 func (gs *GridSchema) Build() []GridItem {
 	lenCells := len(gs.cells)
@@ -64,26 +60,6 @@ func (gs *GridSchema) BuildGrid() *Grid {
 	return grid
 }
 
-func (gs *GridSchema) BuildCol(colSize float64) GridItem {
-	rows := gs.Build()
-
-	return NewCol(colSize, rows)
-}
-
-func (gs *GridSchema) Sizes() []float64 {
-	length := len(gs.rowsSizes)
-	out := make([]float64, 0, length)
-	for i := 0; i < length; i++ {
-		idx := uint8(i)
-		size, ok := gs.rowsSizes[idx]
-		if ok {
-			out = append(out, size.FloatSize())
-		}
-	}
-
-	return out
-}
-
 func (gs *GridSchema) addCell(row uint8, value interface{}) {
 	_, has := gs.rowsSizes[row]
 	if !has {
@@ -95,6 +71,7 @@ func (gs *GridSchema) addCell(row uint8, value interface{}) {
 		l = list.New()
 	}
 	l.PushBack(value)
+	gs.cells[row] = l
 }
 
 func (gs *GridSchema) compile(row uint8) GridItem {
@@ -102,19 +79,18 @@ func (gs *GridSchema) compile(row uint8) GridItem {
 	items := make([]GridItem, 0, cells.Len())
 	for e := cells.Front(); e != nil; e = e.Next() {
 		value := e.Value
-		cd, ok := value.(*CellDetail)
-		if ok {
-			gi := NewCol(cd.getSize(), cd.draw)
+		cd, _ := value.(*CellDetail)
+		if cd.IsSchema() {
+			schema, _ := cd.data.(*GridSchema)
+			gi := NewCol(cd.getSize(), schema.Build())
 			items = append(items, gi)
-			continue
+		} else {
+			widget, _ := cd.data.(Drawable)
+			gi := NewCol(cd.getSize(), widget)
+			items = append(items, gi)
 		}
-		// значит вложена схема
-		gsh, _ := value.(*GridSchema)
-		size := gs.rowsSizes[row]
-
-		items = append(items, gsh.BuildCol(size.FloatSize()))
-
 	}
+
 	size := gs.rowsSizes[row]
 	return NewRow(size.FloatSize(), items)
 }

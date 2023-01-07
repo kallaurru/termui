@@ -2,7 +2,7 @@ package widgets
 
 import (
 	"container/list"
-	. "github.com/kallaur/termui/v3"
+	. "github.com/kallaurru/termui/v3"
 	uuid "github.com/satori/go.uuid"
 	"image"
 )

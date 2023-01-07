@@ -1,4 +1,4 @@
-module github.com/kallaur/termui/v3
+module github.com/kallaurru/termui/v3
 
 go 1.15
 

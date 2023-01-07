@@ -4,7 +4,7 @@ import (
 	"image"
 	"math"
 
-	. "github.com/kallaur/termui/v3"
+	. "github.com/kallaurru/termui/v3"
 )
 
 const (

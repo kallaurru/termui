@@ -9,8 +9,8 @@ package main
 import (
 	"log"
 
-	ui "github.com/gizak/termui/v3"
-	"github.com/gizak/termui/v3/widgets"
+	"github.com/kallaur/termui/v3/widgets"
+	ui "github.com/kallaurru/termui/v3"
 )
 
 func main() {

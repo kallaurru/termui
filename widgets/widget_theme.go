@@ -1,6 +1,6 @@
 package widgets
 
-import . "github.com/kallaur/termui/v3"
+import . "github.com/kallaurru/termui/v3"
 
 type WidgetTheme struct {
 	titleStyle        Style

@@ -1,24 +1,24 @@
 package tmpl
 
 import (
-	. "github.com/kallaur/termui/v3"
-	. "github.com/kallaur/termui/v3/widgets"
+	. "github.com/kallaurru/termui/v3"
+	. "github.com/kallaurru/termui/v3/widgets"
 )
 
 // FormTmpl - шаблоны для создания ui-приложений
 type FormTmpl struct {
 	Block
-	grid     *Grid
-	gridTmpl *GridTmpl
-	theme    *WidgetTheme
+	grid   *Grid
+	schema *GridSchema
+	theme  *WidgetTheme
 }
 
-func NewFormTmpl(isRealBuf bool, rows uint8, rSizes ...uint8) *FormTmpl {
+func NewFormTmpl(isRealBuf bool, schema *GridSchema) *FormTmpl {
 	var maxX, maxY int
 	fTmpl := &FormTmpl{
-		Block:    *NewBlock(),
-		grid:     NewGrid(),
-		gridTmpl: NewGridTmpl(rows),
+		Block:  *NewBlock(),
+		grid:   nil,
+		schema: schema,
 	}
 	if isRealBuf {
 		maxX, maxY = TerminalDimensions()
@@ -27,6 +27,10 @@ func NewFormTmpl(isRealBuf bool, rows uint8, rSizes ...uint8) *FormTmpl {
 	}
 
 	fTmpl.SetRect(0, 0, maxX, maxY)
+
+	grid := fTmpl.schema.BuildGrid()
+	formInner := fTmpl.Inner
+	grid.SetRect(formInner.Min.X, formInner.Min.Y, formInner.Max.X, formInner.Max.Y)
 
 	return fTmpl
 }
@@ -39,18 +43,6 @@ func (ft *FormTmpl) AddTitle(title string) *FormTmpl {
 
 func (ft *FormTmpl) AddTheme(theme *WidgetTheme) *FormTmpl {
 	ft.theme = theme
-
-	return ft
-}
-
-func (ft *FormTmpl) AddGrid(grid *Grid) *FormTmpl {
-	ft.grid = grid
-
-	return ft
-}
-
-func (ft *FormTmpl) AddGridTmpl(grTmpl *GridTmpl) *FormTmpl {
-	ft.gridTmpl = grTmpl
 
 	return ft
 }

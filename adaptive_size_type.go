@@ -1,8 +1,9 @@
 package termui
 
 const (
-	adaptiveSizeMin int = 10
-	adaptiveSizeMax int = 100
+	adaptiveSizeZero int = 0
+	adaptiveSizeMin  int = 10
+	adaptiveSizeMax  int = 100
 )
 
 // AdaptiveSize тип для указания адаптивных размеров под виджеты.
@@ -12,11 +13,14 @@ const (
 type AdaptiveSize int
 
 func NewAdaptiveSize(in int) AdaptiveSize {
+	if in == adaptiveSizeZero || in == adaptiveSizeMax {
+		return AdaptiveSize(in)
+	}
 	// ограничиваем от 10 до 100
 	if in <= adaptiveSizeMin {
-		return AdaptiveSize(adaptiveSizeMax)
+		return AdaptiveSize(adaptiveSizeMin)
 	}
-	if in >= adaptiveSizeMax {
+	if in > adaptiveSizeMax {
 		return AdaptiveSize(adaptiveSizeMax)
 	}
 	return AdaptiveSize(in)
