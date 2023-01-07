@@ -52,10 +52,15 @@ func (gs *GridSchema) Build() []GridItem {
 	return out
 }
 
-func (gs *GridSchema) BuildGrid() *Grid {
+func (gs *GridSchema) BuildGrid(maxX, maxY int) *Grid {
 	items := gs.Build()
 	grid := NewGrid()
-	grid.Set(items)
+	grid.SetRect(0, 0, maxX, maxY)
+	infItems := make([]interface{}, 0, len(items))
+	for _, item := range items {
+		infItems = append(infItems, item)
+	}
+	grid.Set(infItems...)
 
 	return grid
 }

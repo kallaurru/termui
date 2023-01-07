@@ -25,16 +25,14 @@ func main() {
 	logbookSchema.AddCell(0, makeCellDetail(0, 2, ui.NewAdaptiveSize(30), false, makeSchemaCell()))
 	// row 1
 	logbookSchema.AddCell(1, makeCellDetail(1, 0, ui.NewAdaptiveSizeMax(), true, logStack))
-
-	grid := logbookSchema.BuildGrid()
-	grid.Border = true
+	x, y := 0, 0
 	if isReal {
-		termWidth, termHeight := ui.TerminalDimensions()
-		grid.SetRect(0, 0, termWidth, termHeight)
+		x, y = ui.TerminalDimensions()
 	} else {
-		termWidth, termHeight := 80, 120
-		grid.SetRect(0, 0, termWidth, termHeight)
+		x, y = 80, 120
 	}
+	grid := logbookSchema.BuildGrid(x, y)
+	grid.Border = true
 	ui.Render(grid)
 
 	tickerCount := 1

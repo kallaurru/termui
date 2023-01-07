@@ -27,11 +27,9 @@ func NewFormTmpl(isRealBuf bool, schema *GridSchema) *FormTmpl {
 	}
 
 	fTmpl.SetRect(0, 0, maxX, maxY)
-
-	grid := fTmpl.schema.BuildGrid()
 	formInner := fTmpl.Inner
-	grid.SetRect(formInner.Min.X, formInner.Min.Y, formInner.Max.X, formInner.Max.Y)
 
+	fTmpl.grid = fTmpl.schema.BuildGrid(formInner.Max.X, formInner.Max.Y)
 	return fTmpl
 }
 
