@@ -37,9 +37,9 @@ func (gs *GridSchema) AddCell(row uint8, cd *CellDetail) {
 }
 
 // Build - по количеству строк в схеме
-func (gs *GridSchema) Build() []GridItem {
+func (gs *GridSchema) Build() []interface{} {
 	lenCells := len(gs.cells)
-	out := make([]GridItem, 0, lenCells)
+	out := make([]interface{}, 0, lenCells)
 	for i := 0; i < lenCells; i++ {
 		r := uint8(i)
 		cells, ok := gs.cells[r]
@@ -56,11 +56,7 @@ func (gs *GridSchema) BuildGrid(maxX, maxY int) *Grid {
 	items := gs.Build()
 	grid := NewGrid()
 	grid.SetRect(0, 0, maxX, maxY)
-	infItems := make([]interface{}, 0, len(items))
-	for _, item := range items {
-		infItems = append(infItems, item)
-	}
-	grid.Set(infItems...)
+	grid.Set(items...)
 
 	return grid
 }
@@ -81,13 +77,13 @@ func (gs *GridSchema) addCell(row uint8, value interface{}) {
 
 func (gs *GridSchema) compile(row uint8) GridItem {
 	cells := gs.cells[row]
-	items := make([]GridItem, 0, cells.Len())
+	items := make([]interface{}, 0, cells.Len())
 	for e := cells.Front(); e != nil; e = e.Next() {
 		value := e.Value
 		cd, _ := value.(*CellDetail)
 		if cd.IsSchema() {
 			schema, _ := cd.data.(*GridSchema)
-			gi := NewCol(cd.getSize(), schema.Build())
+			gi := NewCol(cd.getSize(), schema.Build()...)
 			items = append(items, gi)
 		} else {
 			widget, _ := cd.data.(Drawable)
@@ -97,5 +93,5 @@ func (gs *GridSchema) compile(row uint8) GridItem {
 	}
 
 	size := gs.rowsSizes[row]
-	return NewRow(size.FloatSize(), items)
+	return NewRow(size.FloatSize(), items...)
 }
