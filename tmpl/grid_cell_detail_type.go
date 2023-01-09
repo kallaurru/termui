@@ -5,6 +5,7 @@ import . "github.com/kallaurru/termui/v3"
 type CellDetail struct {
 	idx  uint16 // индекс колонки
 	size AdaptiveSize
+	name string      // имя для идентификации виджета на форме
 	data interface{} // или Drawable или *GridSchema
 }
 
@@ -22,6 +23,10 @@ func (cd *CellDetail) IsSchema() bool {
 	_, ok := cd.data.(*GridSchema)
 
 	return ok
+}
+
+func (cd *CellDetail) SetName(name string) {
+	cd.name = name
 }
 
 func (cd *CellDetail) SetWidget(widget Drawable) {

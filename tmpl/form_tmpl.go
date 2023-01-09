@@ -5,20 +5,24 @@ import (
 	. "github.com/kallaurru/termui/v3/widgets"
 )
 
+type DPFunc func(name string, data ...interface{}) error
+
 // FormTmpl - шаблоны для создания ui-приложений
 type FormTmpl struct {
 	Block
 	grid   *Grid
 	schema *GridSchema
 	theme  *WidgetTheme
+	dp     DPFunc // провайдер данных для обновления виджетов
 }
 
-func NewFormTmpl(isRealBuf bool, schema *GridSchema) *FormTmpl {
+func NewFormTmpl(isRealBuf bool, schema *GridSchema, dp DPFunc) *FormTmpl {
 	var maxX, maxY int
 	fTmpl := &FormTmpl{
 		Block:  *NewBlock(),
 		grid:   nil,
 		schema: schema,
+		dp:     dp,
 	}
 	if isRealBuf {
 		maxX, maxY = TerminalDimensions()
