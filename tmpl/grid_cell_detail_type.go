@@ -1,6 +1,12 @@
 package tmpl
 
-import . "github.com/kallaurru/termui/v3"
+import (
+	"errors"
+	. "github.com/kallaurru/termui/v3"
+	"github.com/satori/go.uuid"
+)
+
+const errorMsg = "unknown type"
 
 type CellDetail struct {
 	idx  uint16 // индекс колонки
@@ -13,9 +19,10 @@ func NewCellDetail(row, col uint8, size AdaptiveSize) *CellDetail {
 	cd := &CellDetail{
 		idx:  0,
 		size: size, // не более 100
+		name: "",
 	}
-	cd.makeCellAddr(row, col)
 
+	cd.makeCellAddr(row, col)
 	return cd
 }
 
@@ -23,6 +30,14 @@ func (cd *CellDetail) IsSchema() bool {
 	_, ok := cd.data.(*GridSchema)
 
 	return ok
+}
+
+func (cd *CellDetail) GetName() string {
+	if cd.name == "" {
+		return uuid.NewV4().String()
+	}
+
+	return cd.name
 }
 
 func (cd *CellDetail) SetName(name string) {
@@ -33,8 +48,24 @@ func (cd *CellDetail) SetWidget(widget Drawable) {
 	cd.setData(widget)
 }
 
+func (cd *CellDetail) GetWidget() (Drawable, error) {
+	if cd.IsSchema() {
+		return nil, errors.New(errorMsg)
+	}
+
+	return cd.data.(Drawable), nil
+}
+
 func (cd *CellDetail) SetSchema(schema *GridSchema) {
 	cd.setData(schema)
+}
+
+func (cd *CellDetail) GetSchema() (*GridSchema, error) {
+	if cd.IsSchema() {
+		return cd.data.(*GridSchema), nil
+	}
+
+	return nil, errors.New(errorMsg)
 }
 
 func (cd *CellDetail) GetRowIdx() uint8 {

@@ -5,11 +5,17 @@ import (
 	. "github.com/kallaurru/termui/v3"
 )
 
+const (
+	LoggerId = "logger:id"
+	HelperId = "helper:id"
+)
+
 /** Весь макет делим на строки, далее в ячейках могут быть вложенные схемы */
 
 type GridSchema struct {
 	rowsSizes map[uint8]AdaptiveSize
 	cells     map[uint8]*list.List // в списке или схема или детали (GridSchema, CellDetail)
+	idx       map[string]Drawable
 }
 
 func NewGridSchema(sizes ...AdaptiveSize) *GridSchema {
@@ -33,7 +39,21 @@ func NewGridSchema(sizes ...AdaptiveSize) *GridSchema {
 }
 
 func (gs *GridSchema) AddCell(row uint8, cd *CellDetail) {
+	name := cd.GetName()
+	_, ok := gs.idx[name]
+	if !ok {
+		widget, err := cd.GetWidget()
+		if err != nil {
+			return
+		}
+		gs.idx[name] = widget
+	}
 	gs.addCell(row, cd)
+}
+
+func (gs *GridSchema) AddSchema(row uint8, schema *GridSchema) {
+	gs.mergeWidgets(schema)
+	gs.addCell(row, schema)
 }
 
 // Build - по количеству строк в схеме
@@ -59,6 +79,10 @@ func (gs *GridSchema) BuildGrid(maxX, maxY int) *Grid {
 	grid.Set(items...)
 
 	return grid
+}
+
+func (gs *GridSchema) GetWidgets() map[string]Drawable {
+	return gs.idx
 }
 
 func (gs *GridSchema) addCell(row uint8, value interface{}) {
@@ -94,4 +118,14 @@ func (gs *GridSchema) compile(row uint8) GridItem {
 
 	size := gs.rowsSizes[row]
 	return NewRow(size.FloatSize(), items...)
+}
+
+func (gs *GridSchema) mergeWidgets(schema *GridSchema) {
+	widgets := schema.GetWidgets()
+	for name, drw := range widgets {
+		_, ok := gs.idx[name]
+		if !ok {
+			gs.idx[name] = drw
+		}
+	}
 }

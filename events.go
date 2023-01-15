@@ -42,9 +42,20 @@ List of events:
 type EventType uint
 
 const (
+	TickerActionCreate uint8 = 0x00 // создать
+	TickerActionUpdate uint8 = 0x01 // обновить
+	TickerActionDelete uint8 = 0x02 // удалить
+
+	EventTypeDataString    uint8 = 0x01 // строка
+	EventTypeDataArrString uint8 = 0x02 // массив строк
+	EventTypeDataMapString uint8 = 0x04 // карта строка -> строка
+
 	KeyboardEvent EventType = iota
 	MouseEvent
 	ResizeEvent
+	TickerEvent  // событие тикера должен иметь набор константных типов
+	ServiceEvent // событие от внеш сервиса id сервиса
+	InputEvent   // события полей редактирования
 )
 
 type Event struct {
@@ -64,6 +75,24 @@ type Mouse struct {
 type Resize struct {
 	Width  int
 	Height int
+}
+
+// TickerPld payload
+type TickerPld struct {
+	Action uint8
+}
+
+// ServicePld payload
+type ServicePld struct {
+	TypeID uint8
+	Data   interface{}
+}
+
+type InputPld struct {
+	KeyStr         string
+	LineText       string
+	CursorPosition int
+	LineIndex      int
 }
 
 // PollEvents gets events from termbox, converts them, then sends them to each of its channels.
@@ -208,4 +237,8 @@ func convertTermboxEvent(e tb.Event) Event {
 		}
 	}
 	return Event{}
+}
+
+func (e Event) Uuid() string {
+	return fmt.Sprintf("%s:%d", e.ID, e.Type)
 }
