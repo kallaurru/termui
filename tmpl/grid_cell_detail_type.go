@@ -34,7 +34,7 @@ func (cd *CellDetail) IsSchema() bool {
 
 func (cd *CellDetail) GetName() string {
 	if cd.name == "" {
-		return uuid.NewV4().String()
+		cd.name = uuid.NewV4().String()
 	}
 
 	return cd.name

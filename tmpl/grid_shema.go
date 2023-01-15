@@ -22,6 +22,7 @@ func NewGridSchema(sizes ...AdaptiveSize) *GridSchema {
 	gs := &GridSchema{
 		rowsSizes: make(map[uint8]AdaptiveSize),
 		cells:     make(map[uint8]*list.List),
+		idx:       make(map[string]Drawable),
 	}
 	if len(sizes) == 0 {
 		gs.rowsSizes[0] = NewAdaptiveSizeMax()
@@ -44,6 +45,11 @@ func (gs *GridSchema) AddCell(row uint8, cd *CellDetail) {
 	if !ok {
 		widget, err := cd.GetWidget()
 		if err != nil {
+			if cd.IsSchema() {
+				schema, _ := cd.GetSchema()
+				gs.mergeWidgets(schema)
+				gs.addCell(row, cd)
+			}
 			return
 		}
 		gs.idx[name] = widget
