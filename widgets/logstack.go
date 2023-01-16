@@ -28,14 +28,17 @@ func NewLogStack(depth ...uint8) *LogStack {
 			d = logStackDefDepthMax
 		}
 	}
-
-	return &LogStack{
+	ls := &LogStack{
 		Block:  *NewBlock(),
 		id:     uuid.NewV4().String(),
 		depth:  d,
 		stack:  list.New(),
 		fields: []int{16, 4, -1}, // 0 и -1 можно ставить на поля в строках которых нет описания стилей
 	}
+
+	ls.Block.Border = false
+
+	return ls
 }
 
 /** ИНТЕРФЕЙС Widget */
@@ -71,9 +74,9 @@ func (ls *LogStack) Draw(buf *Buffer) {
 	// проходим по записям в хранилище. Строки в таблице
 	for el := ls.stack.Front(); el != nil; el = el.Next() {
 		x := ls.Inner.Min.X // сквозная координата по всей площади
-		rec := el.Value.(*LogRecord)
+		rec := el.Value.(LogRecord)
 		// колонки в строке
-		cols := fLogRecToCells(rec)
+		cols := fLogRecToCells(&rec)
 		ls.fields = ConvWidthRelativeToAbs(
 			ls.Inner.Min.X,
 			ls.Inner.Max.X,

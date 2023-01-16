@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	ui "github.com/kallaurru/termui/v3"
 	"github.com/kallaurru/termui/v3/tmpl"
 	"github.com/kallaurru/termui/v3/widgets"
@@ -14,9 +15,12 @@ func main() {
 	}
 	defer ui.Close()
 
-	isReal := false
+	isReal := true
 
 	logStack := widgets.NewLogStack(5)
+	logStack.AddWarnLogRecord("This is a warning message")
+	logStack.AddErrLogRecord(errors.New("this is error test message"))
+	logStack.AddInfoLogRecord("This is info message")
 
 	logbookSchema := tmpl.NewGridSchema(ui.NewAdaptiveSize(80), ui.NewAdaptiveSizeTwenty())
 	// row 0
