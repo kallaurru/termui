@@ -53,6 +53,9 @@ func (at *ATable) AddCellAlignment(idxRow, idxCol int, alignment Alignment) {
 
 // AddColAlignmentHelperTheme - желательно вызвать после того как заполнено свойство Rows
 func (at *ATable) AddColAlignmentHelperTheme() {
+	if at.ColTextAlignment == nil {
+		at.ColTextAlignment = make(map[int]Alignment)
+	}
 	if !at.useCellAlignment {
 		at.ColTextAlignment[0] = AlignRight
 		at.ColTextAlignment[1] = AlignLeft

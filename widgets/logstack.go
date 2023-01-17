@@ -47,6 +47,10 @@ func (ls *LogStack) GetId() string {
 	return ls.id
 }
 
+func (ls *LogStack) SetId(name string) {
+	ls.id = name
+}
+
 func (ls *LogStack) AddInfoLogRecord(message string) {
 	ls.addLogRecord(message, LogRecTypeInfo)
 }
