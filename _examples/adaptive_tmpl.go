@@ -24,7 +24,8 @@ func main() {
 
 	logbookSchema := tmpl.NewGridSchema(ui.NewAdaptiveSize(80), ui.NewAdaptiveSizeTwenty())
 	// row 0
-	logbookSchema.AddCell(0, makeCellDetail(0, 0, ui.NewAdaptiveSize(30), false, makeSchemaCell()))
+	g := makeGauge()
+	logbookSchema.AddCell(0, makeCellDetail(0, 0, ui.NewAdaptiveSize(30), false, makeSchemaCellWithGauge(g)))
 	logbookSchema.AddCell(0, makeCellDetail(0, 1, ui.NewAdaptiveSize(40), true, makeList()))
 	logbookSchema.AddCell(0, makeCellDetail(0, 2, ui.NewAdaptiveSize(30), false, makeSchemaCell()))
 	// row 1
@@ -42,7 +43,7 @@ func main() {
 	tickerCount := 1
 	uiEvents := ui.PollEvents()
 	ticker := time.NewTicker(time.Second).C
-
+	tickerMax := 30
 	for {
 		select {
 		case e := <-uiEvents:
@@ -56,10 +57,13 @@ func main() {
 				ui.Render(grid)
 			}
 		case <-ticker:
-			if tickerCount == 30 {
+			if tickerCount == tickerMax {
 				return
 			}
 			tickerCount++
+			res := float64(tickerCount) / float64(tickerMax) * 100
+			g.Percent = int(res)
+			ui.Render(g)
 		}
 	}
 }
@@ -68,6 +72,11 @@ func makeSchemaCell() *tmpl.GridSchema {
 	gauge := widgets.NewGauge()
 	gauge.Percent = 10
 	gauge.BarColor = ui.ColorBlue
+	gauge.Title = "Loaded months"
+	gauge.BorderStyle.Fg = ui.ColorWhite
+	gauge.TitleStyle.Fg = ui.ColorCyan
+	gauge.Label = "Two month loaded"
+	gauge.LabelStyle.Fg = ui.ColorGreen
 
 	ls := widgets.NewList()
 	ls.Border = false
@@ -81,6 +90,27 @@ func makeSchemaCell() *tmpl.GridSchema {
 
 	schema := tmpl.NewGridSchema(ui.NewAdaptiveSizeMin(), ui.NewAdaptiveSize(90))
 	firstRow := makeCellDetail(0, 0, ui.NewAdaptiveSizeMax(), true, gauge)
+	secondRow := makeCellDetail(1, 0, ui.NewAdaptiveSizeMax(), true, ls)
+
+	schema.AddCell(0, firstRow)
+	schema.AddCell(1, secondRow)
+
+	return schema
+}
+
+func makeSchemaCellWithGauge(g *widgets.Gauge) *tmpl.GridSchema {
+	ls := widgets.NewList()
+	ls.Border = false
+	ls.Rows = []string{
+		"[1] Downloading File 1",
+		"",
+		"[2] Downloading File 2",
+		"",
+		"[3] Uploading File 3",
+	}
+
+	schema := tmpl.NewGridSchema(ui.NewAdaptiveSizeMin(), ui.NewAdaptiveSize(90))
+	firstRow := makeCellDetail(0, 0, ui.NewAdaptiveSizeMax(), true, g)
 	secondRow := makeCellDetail(1, 0, ui.NewAdaptiveSizeMax(), true, ls)
 
 	schema.AddCell(0, firstRow)
@@ -119,4 +149,17 @@ func makeCellDetail(row, col uint8, size ui.AdaptiveSize, isWidget bool, data in
 	}
 
 	return nil
+}
+
+func makeGauge() *widgets.Gauge {
+	gauge := widgets.NewGauge()
+	gauge.Percent = 10
+	gauge.BarColor = ui.ColorBlue
+	gauge.Title = "Loaded months"
+	gauge.BorderStyle.Fg = ui.ColorWhite
+	gauge.TitleStyle.Fg = ui.ColorCyan
+	gauge.Label = "Two month loaded"
+	gauge.LabelStyle.Fg = ui.ColorGreen
+
+	return gauge
 }
