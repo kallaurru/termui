@@ -21,7 +21,7 @@ func NewATable() *ATable {
 		Table: Table{
 			Block:         *NewBlock(),
 			TextStyle:     Theme.Table.Text,
-			RowSeparator:  true,
+			RowSeparator:  false,
 			RowStyles:     make(map[int]Style),
 			ColumnResizer: func() {},
 		},
@@ -39,6 +39,9 @@ func (at *ATable) UseCellAlignment() {
 }
 
 func (at *ATable) AddColAlignment(colIdx int, alignment Alignment) {
+	if at.ColTextAlignment == nil {
+		at.ColTextAlignment = make(map[int]Alignment)
+	}
 	if !at.useCellAlignment {
 		at.ColTextAlignment[colIdx] = alignment
 	}

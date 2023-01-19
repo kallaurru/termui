@@ -16,7 +16,9 @@ func main() {
 	}
 	defer ui.Close()
 
-	isReal := true
+	var focus, isReal bool
+	isReal = true
+	focus = true
 
 	logStack := widgets.NewLogStack(5)
 	logStack.AddWarnLogRecord("This is a warning message")
@@ -52,11 +54,14 @@ func main() {
 			switch e.ID {
 			case "q", "<C-c>":
 				return
-			case "<F10>":
+			case "<F1>":
 				ui.Render(helper)
+				focus = false
 			case "<Backspace>":
-				ui.Clear()
-				ui.Render(grid)
+				if !focus {
+					ui.Clear()
+					ui.Render(grid)
+				}
 			case "<Resize>":
 				payload := e.Payload.(ui.Resize)
 				grid.SetRect(0, 0, payload.Width, payload.Height)
@@ -106,14 +111,25 @@ func makeSchemaCell() *tmpl.GridSchema {
 }
 
 func makeSchemaCellWithGauge(g *widgets.Gauge) *tmpl.GridSchema {
-	fin := makeHlpFinance()
+	fin := makeFinanceWidget()
+	ll := makeLossLimitWidget()
+	pb := makeBudgetPosi()
 
-	schema := tmpl.NewGridSchema(ui.NewAdaptiveSizeMin(), ui.NewAdaptiveSize(90))
+	schema := tmpl.NewGridSchema(
+		ui.NewAdaptiveSizeMin(),
+		ui.NewAdaptiveSizeThird(),
+		ui.NewAdaptiveSizeThird(),
+		ui.NewAdaptiveSizeThird())
+
 	firstRow := makeCellDetail(0, 0, ui.NewAdaptiveSizeMax(), true, g)
 	secondRow := makeCellDetail(1, 0, ui.NewAdaptiveSizeMax(), true, fin)
+	row3 := makeCellDetail(1, 0, ui.NewAdaptiveSizeMax(), true, ll)
+	row4 := makeCellDetail(1, 0, ui.NewAdaptiveSizeMax(), true, pb)
 
 	schema.AddCell(0, firstRow)
 	schema.AddCell(1, secondRow)
+	schema.AddCell(2, row3)
+	schema.AddCell(3, row4)
 
 	return schema
 }
@@ -195,7 +211,7 @@ func makeHlpPopup(parent image.Rectangle) *widgets.ATable {
 	return table
 }
 
-func makeHlpFinance() *widgets.ATable {
+func makeFinanceWidget() *widgets.ATable {
 	table := widgets.NewATable()
 	table.PaddingTop = 1
 	table.Border = true
@@ -211,6 +227,50 @@ func makeHlpFinance() *widgets.ATable {
 		{"[-> D:](fg:white,mod:bold)", "[8787](fg:red,mod:bold)"},
 		{"[-> M:](fg:white,mod:bold)", "[9000](fg:green,mod:bold)"},
 		{"[-> Y:](fg:white,mod:bold)", "[999 999](fg:green,mod:bold)"},
+	}
+
+	return table
+}
+
+func makeLossLimitWidget() *widgets.ATable {
+	table := widgets.NewATable()
+	table.PaddingTop = 1
+	table.Border = true
+	table.Title = "Limit per day - 500"
+	table.RowSeparator = false
+	table.ColSeparator = false
+
+	table.ColumnWidths = []int{12, -1}
+
+	table.AddColAlignmentHelperTheme()
+	table.Rows = [][]string{
+		{"[Limits:](fg:white,mod:bold)", "[Loss limits](fg:white,mod:bold)"},
+		{"[-> D:](fg:white,mod:bold)", "[400](fg:red,mod:bold)"},
+		{"[Ext In](fg:white,mod:bold)", "[9000](fg:green,mod:bold)"},
+		{"[Last Day %](fg:white,mod:bold)", "[200](fg:green,mod:bold)"},
+	}
+
+	return table
+}
+
+func makeBudgetPosi() *widgets.ATable {
+	table := widgets.NewATable()
+	table.PaddingTop = 1
+	table.Border = true
+	table.Title = "Budgets. Total - 39283298"
+	table.RowSeparator = false
+	table.ColSeparator = false
+
+	table.ColumnWidths = []int{7, 10, -1}
+
+	table.AddColAlignment(0, ui.AlignCenter)
+	table.AddColAlignment(1, ui.AlignCenter)
+	table.AddColAlignment(2, ui.AlignCenter)
+	table.Rows = [][]string{
+		{"[SBER](fg:white,mod:bold)", "[75 000](fg:white,mod:bold)", "[0](fg:white,mod:bold)"},
+		{"[POSI](fg:white,mod:bold)", "[75 000](fg:red,mod:bold)", "[2](fg:green,mod:bold)"},
+		{"[TCSG](fg:white,mod:bold)", "[75 000](fg:green,mod:bold)", "[0](fg:white,mod:bold)"},
+		{"[PLZL](fg:white,mod:bold)", "[75 000](fg:green,mod:bold)", "[0](fg:white,mod:bold)"},
 	}
 
 	return table
