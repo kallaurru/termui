@@ -5,6 +5,7 @@
 package termui
 
 import (
+	"fmt"
 	"image"
 	"sync"
 )
@@ -102,4 +103,15 @@ func (self *Block) SetRect(x1, y1, x2, y2 int) {
 // GetRect implements the Drawable interface.
 func (self *Block) GetRect() image.Rectangle {
 	return self.Rectangle
+}
+
+func (self *Block) MakeGlamourTitle(title string) {
+	left := []rune{9508}
+	right := []rune{9500}
+
+	self.Title = fmt.Sprintf(
+		"%s %s %s",
+		string(left),
+		title,
+		string(right))
 }

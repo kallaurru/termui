@@ -25,12 +25,12 @@ func main() {
 	logStack.AddErrLogRecord(errors.New("this is error test message"))
 	logStack.AddInfoLogRecord("This is info message")
 
-	logbookSchema := tmpl.NewGridSchema(ui.NewAdaptiveSize(80), ui.NewAdaptiveSizeTwenty())
+	logbookSchema := tmpl.NewGridSchema(ui.NewAdaptiveSize(80), ui.NewAdaptiveSize(20))
 	// row 0
 	g := makeGauge()
 	logbookSchema.AddCell(0, makeCellDetail(0, 0, ui.NewAdaptiveSize(30), false, makeSchemaCellWithGauge(g)))
-	logbookSchema.AddCell(0, makeCellDetail(0, 1, ui.NewAdaptiveSize(40), true, makeList()))
-	logbookSchema.AddCell(0, makeCellDetail(0, 2, ui.NewAdaptiveSize(30), false, makeSchemaCell()))
+	logbookSchema.AddCell(0, makeCellDetail(0, 1, ui.NewAdaptiveSize(40), false, makeCentralZoneSchema()))
+	logbookSchema.AddCell(0, makeCellDetail(0, 2, ui.NewAdaptiveSize(30), false, makeSchemaCellWithGauge(g)))
 	// row 1
 	logbookSchema.AddCell(1, makeCellDetail(1, 0, ui.NewAdaptiveSizeMax(), true, logStack))
 	x, y := 0, 0
@@ -117,19 +117,52 @@ func makeSchemaCellWithGauge(g *widgets.Gauge) *tmpl.GridSchema {
 
 	schema := tmpl.NewGridSchema(
 		ui.NewAdaptiveSizeMin(),
-		ui.NewAdaptiveSizeThird(),
-		ui.NewAdaptiveSizeThird(),
+		ui.NewAdaptiveSizeTwenty(),
+		ui.NewAdaptiveSize(40),
 		ui.NewAdaptiveSizeThird())
 
 	firstRow := makeCellDetail(0, 0, ui.NewAdaptiveSizeMax(), true, g)
 	secondRow := makeCellDetail(1, 0, ui.NewAdaptiveSizeMax(), true, fin)
-	row3 := makeCellDetail(1, 0, ui.NewAdaptiveSizeMax(), true, ll)
-	row4 := makeCellDetail(1, 0, ui.NewAdaptiveSizeMax(), true, pb)
+	row3 := makeCellDetail(2, 0, ui.NewAdaptiveSizeMax(), true, ll)
+	row4 := makeCellDetail(3, 0, ui.NewAdaptiveSizeMax(), true, pb)
 
 	schema.AddCell(0, firstRow)
 	schema.AddCell(1, secondRow)
-	schema.AddCell(2, row3)
-	schema.AddCell(3, row4)
+	schema.AddCell(2, row4)
+	schema.AddCell(3, row3)
+
+	return schema
+}
+
+func makeCentralZoneSchema() *tmpl.GridSchema {
+	schema := tmpl.NewGridSchema(
+		ui.NewAdaptiveSizeThird(),
+		ui.NewAdaptiveSize(40),
+		ui.NewAdaptiveSizeThird())
+
+	first := widgets.NewBarChart()
+	first.Labels = []string{"Op", "In", "Di"}
+	first.Data = []float64{100000, 400000, 5000}
+	first.MakeGlamourTitle("Incoming")
+	first.BarWidth = 5
+	first.BarColors = []ui.Color{ui.ColorRed, ui.ColorGreen}
+	first.LabelStyles = []ui.Style{ui.NewStyle(ui.ColorBlue)}
+	first.NumStyles = []ui.Style{ui.NewStyle(ui.ColorYellow)}
+
+	th := widgets.NewBarChart()
+	th.Labels = []string{"Bf", "Tx", "Sh"} // bf - комиссия за оп, tx - налоги, sh - комиссия за плечи
+	th.Data = []float64{1030, 30000, 1000}
+	th.MakeGlamourTitle("Expenses")
+	th.BarWidth = 5
+	th.BarColors = []ui.Color{ui.ColorRed, ui.ColorGreen}
+	th.LabelStyles = []ui.Style{ui.NewStyle(ui.ColorBlue)}
+	th.NumStyles = []ui.Style{ui.NewStyle(ui.ColorYellow)}
+
+	second := makeLossLimitWidget()
+
+	schema.AddCell(0, makeCellDetail(0, 0, ui.NewAdaptiveSizeMax(), true, first))
+	schema.AddCell(1, makeCellDetail(1, 0, ui.NewAdaptiveSizeMax(), true, second))
+	schema.AddCell(2, makeCellDetail(2, 0, ui.NewAdaptiveSizeMax(), true, th))
 
 	return schema
 }
@@ -215,7 +248,7 @@ func makeFinanceWidget() *widgets.ATable {
 	table := widgets.NewATable()
 	table.PaddingTop = 1
 	table.Border = true
-	table.Title = "17/01/2023. Acc - 1782637621"
+	table.MakeGlamourTitle("17/01/2023. Acc - 1782637621")
 	table.RowSeparator = false
 	table.ColSeparator = false
 
@@ -236,7 +269,8 @@ func makeLossLimitWidget() *widgets.ATable {
 	table := widgets.NewATable()
 	table.PaddingTop = 1
 	table.Border = true
-	table.Title = "Limit per day - 500"
+	table.MakeGlamourTitle("Limit per day - 500")
+
 	table.RowSeparator = false
 	table.ColSeparator = false
 
@@ -257,7 +291,7 @@ func makeBudgetPosi() *widgets.ATable {
 	table := widgets.NewATable()
 	table.PaddingTop = 1
 	table.Border = true
-	table.Title = "Budgets. Total - 39283298"
+	table.MakeGlamourTitle("Budgets. Total - 39283298")
 	table.RowSeparator = false
 	table.ColSeparator = false
 
