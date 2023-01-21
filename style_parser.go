@@ -42,6 +42,10 @@ var StyleParserColorMap = map[string]Color{
 	"clear":   ColorClear,
 	"green":   ColorGreen,
 	"magenta": ColorMagenta,
+	"22":      GreenBgDunkel,
+	"23":      GreenBlue,
+	"30":      BlueLightFg,
+	"31":      BlueLightFg2,
 }
 
 var modifierMap = map[string]Modifier{

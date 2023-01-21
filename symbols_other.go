@@ -7,22 +7,22 @@
 package termui
 
 const (
-	TOP_LEFT     = '┌'
-	TOP_RIGHT    = '┐'
-	BOTTOM_LEFT  = '└'
-	BOTTOM_RIGHT = '┘'
+	TOP_LEFT     int32 = '┌'
+	TOP_RIGHT    int32 = '┐'
+	BOTTOM_LEFT  int32 = '└'
+	BOTTOM_RIGHT int32 = '┘'
 
-	VERTICAL_LINE   = '│'
-	HORIZONTAL_LINE = '─'
+	VERTICAL_LINE   int32 = '│'
+	HORIZONTAL_LINE int32 = '─'
 
-	VERTICAL_LEFT   = '┤'
-	VERTICAL_RIGHT  = '├'
-	HORIZONTAL_UP   = '┴'
-	HORIZONTAL_DOWN = '┬'
+	VERTICAL_LEFT   int32 = '┤'
+	VERTICAL_RIGHT  int32 = '├'
+	HORIZONTAL_UP   int32 = '┴'
+	HORIZONTAL_DOWN int32 = '┬'
 
-	QUOTA_LEFT  = '«'
-	QUOTA_RIGHT = '»'
+	QUOTA_LEFT  int32 = '«'
+	QUOTA_RIGHT int32 = '»'
 
-	VERTICAL_DASH   = '┊'
-	HORIZONTAL_DASH = '┈'
+	VERTICAL_DASH   int32 = '┊'
+	HORIZONTAL_DASH int32 = '┈'
 )

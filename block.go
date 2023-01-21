@@ -106,12 +106,9 @@ func (self *Block) GetRect() image.Rectangle {
 }
 
 func (self *Block) MakeGlamourTitle(title string) {
-	left := []rune{9508}
-	right := []rune{9500}
-
 	self.Title = fmt.Sprintf(
 		"%s %s %s",
-		string(left),
+		string(VERTICAL_LEFT),
 		title,
-		string(right))
+		string(VERTICAL_RIGHT))
 }

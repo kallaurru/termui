@@ -39,7 +39,7 @@ func NewGridSchema(sizes ...AdaptiveSize) *GridSchema {
 	return nil
 }
 
-func (gs *GridSchema) AddCell(row uint8, cd *CellDetail) {
+func (gs *GridSchema) AddCell(rowInSchema uint8, cd *CellDetail) {
 	name := cd.GetName()
 	_, ok := gs.idx[name]
 	if !ok {
@@ -48,13 +48,13 @@ func (gs *GridSchema) AddCell(row uint8, cd *CellDetail) {
 			if cd.IsSchema() {
 				schema, _ := cd.GetSchema()
 				gs.mergeWidgets(schema)
-				gs.addCell(row, cd)
+				gs.addCell(rowInSchema, cd)
 			}
 			return
 		}
 		gs.idx[name] = widget
 	}
-	gs.addCell(row, cd)
+	gs.addCell(rowInSchema, cd)
 }
 
 func (gs *GridSchema) AddSchema(row uint8, schema *GridSchema) {

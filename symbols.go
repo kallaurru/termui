@@ -4,11 +4,25 @@ const (
 	DOT      = '•'
 	ELLIPSES = '…'
 
-	UP_ARROW   = '▲'
-	DOWN_ARROW = '▼'
+	UP_ARROW    = '▲'
+	DOWN_ARROW  = '▼'
+	LEFT_ARROW  = '◀'
+	RIGHT_ARROW = '▶'
 
-	COLLAPSED = '+'
-	EXPANDED  = '−'
+	COLLAPSED       = '+'
+	EXPANDED        = '−'
+	EMPTY     int32 = ' '
+	RUR       int32 = '\u20b6'
+	SHEKEL    int32 = '\u20aa'
+
+	// греческие буквы
+
+	GR_TETA  int32 = 'Θ'
+	GR_DELTA int32 = 'Δ'
+	GR_KSI   int32 = 'Ξ'
+	GR_PSI   int32 = 'Ψ'
+	GR_OMEGA int32 = 'Ω'
+	GR_SIGMA int32 = 'Σ'
 )
 
 var (

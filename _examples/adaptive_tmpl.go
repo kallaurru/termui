@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	ui "github.com/kallaurru/termui/v3"
 	"github.com/kallaurru/termui/v3/tmpl"
 	"github.com/kallaurru/termui/v3/widgets"
@@ -245,22 +246,58 @@ func makeHlpPopup(parent image.Rectangle) *widgets.ATable {
 }
 
 func makeFinanceWidget() *widgets.ATable {
+	titlePref := ui.ConvertSymToMarkers("A")
 	table := widgets.NewATable()
 	table.PaddingTop = 1
 	table.Border = true
-	table.MakeGlamourTitle("17/01/2023. Acc - 1782637621")
+	table.MakeGlamourTitle(fmt.Sprintf("%s 1782637621", titlePref))
 	table.RowSeparator = false
 	table.ColSeparator = false
 
-	table.ColumnWidths = []int{7, -1}
+	table.ColumnWidths = []int{2, 12, -1}
 
-	table.AddColAlignmentHelperTheme()
-	table.Rows = [][]string{
-		{"[Bal:](fg:white,mod:bold)", "[450 000 RUR](fg:white,mod:bold)"},
-		{"[-> D:](fg:white,mod:bold)", "[8787](fg:red,mod:bold)"},
-		{"[-> M:](fg:white,mod:bold)", "[9000](fg:green,mod:bold)"},
-		{"[-> Y:](fg:white,mod:bold)", "[999 999](fg:green,mod:bold)"},
+	table.AddColAlignment(0, ui.AlignRight)
+	table.AddColAlignment(1, ui.AlignLeft)
+	table.AddColAlignment(2, ui.AlignRight)
+	rowMaker := func() [][]string {
+		balPref := ui.ConvertSymToMarkers("B")
+		balSuf := ui.ConvertToMonoNumbers(450000)
+		balLines := []string{
+			fmt.Sprintf("[%s ](fg:white,bg:22,mod:bold)", balPref),
+			fmt.Sprintf("[%s %s](fg:white,bg:22,mod:bold)", string(ui.RUR), balSuf),
+			"баланс",
+		}
+
+		dayPref := ui.ConvertSymToMarkers("D")
+		daySuf := ui.ConvertToMonoNumbers(8787)
+		dayLines := []string{
+			fmt.Sprintf("[%s ](fg:30,mod:bold)", dayPref),
+			fmt.Sprintf("[%s %s](fg:30,mod:bold)", string(ui.RUR), daySuf),
+			"за день",
+		}
+		monPref := ui.ConvertSymToMarkers("M")
+		monSuf := ui.ConvertToMonoNumbers(9000)
+		monLines := []string{
+			fmt.Sprintf("[%s ](fg:white,mod:bold)", monPref),
+			fmt.Sprintf("[%s %s](fg:green,mod:bold)", string(ui.RUR), monSuf),
+			"за месяц",
+		}
+		yPref := ui.ConvertSymToMarkers("Y")
+		ySuf := ui.ConvertToMonoNumbers(9999999)
+		yLines := []string{
+			fmt.Sprintf("[%s ](fg:white,mod:bold)", yPref),
+			fmt.Sprintf("[%s %s](fg:green,mod:bold)", string(ui.RUR), ySuf),
+			"за год",
+		}
+
+		return [][]string{
+			balLines,
+			dayLines,
+			monLines,
+			yLines,
+		}
 	}
+	table.Rows = rowMaker()
 
 	return table
 }
@@ -269,7 +306,7 @@ func makeLossLimitWidget() *widgets.ATable {
 	table := widgets.NewATable()
 	table.PaddingTop = 1
 	table.Border = true
-	table.MakeGlamourTitle("Limit per day - 500")
+	table.MakeGlamourTitle("Stop-Loss Limits")
 
 	table.RowSeparator = false
 	table.ColSeparator = false
