@@ -39,7 +39,7 @@ func main() {
 }
 
 func makeLogStack() *widgets.LogStack {
-	logStack := widgets.NewLogStack(5)
+	logStack := widgets.NewLogStack(7)
 	logStack.AddWarnLogRecord("This is a warning message")
 	logStack.AddErrLogRecord(errors.New("this is error test message"))
 	logStack.AddInfoLogRecord("This is info message")
