@@ -114,7 +114,7 @@ func makeSchemaCell() *tmpl.GridSchema {
 func makeSchemaCellWithGauge(g *widgets.Gauge) *tmpl.GridSchema {
 	fin := makeFinanceWidget()
 	ll := makeLossLimitWidget()
-	pb := makeBudgetPosi()
+	pb := makeBudgetPosition()
 
 	schema := tmpl.NewGridSchema(
 		ui.NewAdaptiveSizeMin(),
@@ -324,7 +324,7 @@ func makeLossLimitWidget() *widgets.ATable {
 	return table
 }
 
-func makeBudgetPosi() *widgets.ATable {
+func makeBudgetPosition() *widgets.ATable {
 	table := widgets.NewATable()
 	table.PaddingTop = 1
 	table.Border = true

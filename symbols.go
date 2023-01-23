@@ -9,11 +9,12 @@ const (
 	LEFT_ARROW  = '◀'
 	RIGHT_ARROW = '▶'
 
-	COLLAPSED       = '+'
-	EXPANDED        = '−'
-	EMPTY     int32 = ' '
-	RUR       int32 = '\u20b6'
-	SHEKEL    int32 = '\u20aa'
+	COLLAPSED        = '+'
+	EXPANDED         = '−'
+	EMPTY      int32 = ' '
+	RUR        int32 = '\u20b6'
+	SHEKEL     int32 = '\u20aa'
+	SYMBOL_YAT int32 = 'Ѣ'
 
 	CHECK_DEFAULT   int32 = '✓'
 	DISABLE_DEFAULT int32 = '✖'
