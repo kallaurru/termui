@@ -54,6 +54,16 @@ var modifierMap = map[string]Modifier{
 	"reverse":   ModifierReverse,
 }
 
+func MakeMapColorStyleForParser() map[Color]string {
+	m := make(map[Color]string)
+
+	for strColor, color := range StyleParserColorMap {
+		m[color] = strColor
+	}
+
+	return m
+}
+
 // readStyle translates an []rune like `fg:red,mod:bold,bg:white` to a style
 func readStyle(runes []rune, defaultStyle Style) Style {
 	style := defaultStyle
@@ -79,11 +89,12 @@ func readStyle(runes []rune, defaultStyle Style) Style {
 // Syntax is of the form [text](fg:<color>,mod:<attribute>,bg:<color>).
 // Ordering does not matter. All fields are optional.
 func ParseStyles(s string, defaultStyle Style) []Cell {
-	cells := []Cell{}
+	var cells []Cell
+	var styledText []rune
+	var styleItems []rune
+
 	runes := []rune(s)
 	state := parserStateDefault
-	styledText := []rune{}
-	styleItems := []rune{}
 	squareCount := 0
 
 	reset := func() {

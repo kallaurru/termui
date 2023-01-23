@@ -67,3 +67,52 @@ func NewStyle(fg Color, args ...interface{}) Style {
 		modifier,
 	}
 }
+
+func NewStyleFromStyleCode(code uint32) Style {
+	// 1 << 24 fg = -1
+	// 1 << 25 bg = -1
+	// младший байт = fg
+	// второй байт = modifier
+	// третий байт = bg
+	var bg, fg Color
+	var mod Modifier
+	// сначала проверим есть ли значения -1
+	negative := code >> 24
+	mod = Modifier(code & 0x0000ff00)
+
+	switch negative {
+	case 0:
+		fg = Color(code & 0xff)
+		bg = Color((code >> 16) & 0xff)
+	case 1:
+		fg = -1 * Color(negative)
+		bg = Color((code >> 16) & 0xff)
+	case 2:
+		fg = -1 * Color(negative)
+		bg = -1 * Color(negative)
+	}
+
+	return Style{
+		Bg:       bg,
+		Fg:       fg,
+		Modifier: mod,
+	}
+}
+
+func StyleSerializeToCode(st Style) uint32 {
+	var code uint32
+
+	if st.Fg == -1 {
+		code |= 1 << 24
+	} else {
+		code |= uint32(st.Fg)
+	}
+	if st.Bg == -1 {
+		code |= 1 << 25
+	} else {
+		code |= uint32(st.Bg) << 16
+	}
+
+	code |= uint32(st.Modifier)
+	return code
+}

@@ -15,6 +15,9 @@ const (
 	RUR       int32 = '\u20b6'
 	SHEKEL    int32 = '\u20aa'
 
+	CHECK_DEFAULT   int32 = '✓'
+	DISABLE_DEFAULT int32 = '✖'
+
 	// греческие буквы
 
 	GR_TETA  int32 = 'Θ'
@@ -23,6 +26,26 @@ const (
 	GR_PSI   int32 = 'Ψ'
 	GR_OMEGA int32 = 'Ω'
 	GR_SIGMA int32 = 'Σ'
+
+	// римские цифры
+
+	ROME_1  int32 = 'Ⅰ'
+	ROME_2  int32 = 'Ⅱ'
+	ROME_3  int32 = 'Ⅲ'
+	ROME_4  int32 = 'Ⅳ'
+	ROME_5  int32 = 'Ⅴ'
+	ROME_6  int32 = 'Ⅵ'
+	ROME_7  int32 = 'Ⅶ'
+	ROME_8  int32 = 'Ⅷ'
+	ROME_9  int32 = 'Ⅸ'
+	ROME_10 int32 = 'Ⅹ'
+	ROME_11 int32 = 'Ⅺ'
+	ROME_12 int32 = 'Ⅻ'
+
+	ROME_50   int32 = 'Ⅼ'
+	ROME_100  int32 = 'Ⅽ'
+	ROME_500  int32 = 'Ⅾ'
+	ROME_1000 int32 = 'Ⅿ'
 )
 
 var (

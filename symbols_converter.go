@@ -44,7 +44,7 @@ func ConvertToFullNumbers(in int32) string {
 }
 
 func ConvertSymToMarkers(in string) string {
-	m := makeMapCyrcleLat()
+	m := makeMapCircleLat()
 	line := []rune(in)
 	cache := make([]int32, 0, len(line))
 	for _, code := range line {
@@ -91,7 +91,7 @@ func makeMapFullNumbers() map[int32]int32 {
 	return convMap
 }
 
-func makeMapCyrcleLat() map[int32]int32 {
+func makeMapCircleLat() map[int32]int32 {
 	var (
 		convMap              = make(map[int32]int32)
 		startKeyNumber int32 = 0x0041
