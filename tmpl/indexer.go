@@ -83,7 +83,7 @@ func (i *Indexer) ToTable(rows, cols uint8) [][]string {
 					continue
 				}
 				if len(paramsCache) > 0 {
-					str := i.makeStr(ip+1, paramsCache)
+					str := i.makeStr(ip+1, paramsCache, false)
 					rowData = append(rowData, str)
 				}
 				break
@@ -118,7 +118,7 @@ func (i *Indexer) ToList(rows uint8) []string {
 				continue
 			}
 			if len(paramsCache) > 0 {
-				str := i.makeStr(ip+1, paramsCache)
+				str := i.makeStr(ip+1, paramsCache, true)
 				out = append(out, str)
 			}
 			break
@@ -145,15 +145,21 @@ func (i *Indexer) ToString() string {
 			continue
 		}
 		if len(paramsCache) > 0 {
-			return i.makeStr(ip+1, paramsCache)
+			return i.makeStr(ip+1, paramsCache, true)
 		}
 	}
 	return ""
 }
 
-func (i *Indexer) makeStr(countParams uint8, data []interface{}) string {
-	formatStr := strings.Repeat("%s ", int(countParams))
-	formatStr = strings.TrimRight(formatStr, " ")
+func (i *Indexer) makeStr(countParams uint8, data []interface{}, useSplit32 bool) string {
+	var formatStr string
+
+	if useSplit32 {
+		formatStr = strings.Repeat("%s ", int(countParams))
+		formatStr = strings.TrimRight(formatStr, " ")
+	} else {
+		formatStr = strings.Repeat("%s", int(countParams))
+	}
 
 	return fmt.Sprintf(formatStr, data...)
 }

@@ -5,6 +5,7 @@
 package termui
 
 import (
+	"fmt"
 	"strings"
 )
 
@@ -16,8 +17,8 @@ const (
 	tokenItemSeparator  = ","
 	tokenValueSeparator = ":"
 
-	tokenBeginStyledText = '['
-	tokenEndStyledText   = ']'
+	TokenBeginStyledText = '['
+	TokenEndStyledText   = ']'
 
 	tokenBeginStyle = '('
 	tokenEndStyle   = ')'
@@ -54,14 +55,62 @@ var modifierMap = map[string]Modifier{
 	"reverse":   ModifierReverse,
 }
 
-func MakeMapColorStyleForParser() map[Color]string {
+func StyleToString(style Style) string {
+	var (
+		hasFg, hasBg, hasMod = false, false, false
+		out                  = ""
+	)
+
 	m := make(map[Color]string)
+	mm := make(map[Modifier]string)
 
 	for strColor, color := range StyleParserColorMap {
 		m[color] = strColor
 	}
 
-	return m
+	for strMod, mod := range modifierMap {
+		mm[mod] = strMod
+	}
+
+	fg, ok := m[style.Fg]
+	if ok {
+		hasFg = true
+	}
+
+	bg, ok := m[style.Bg]
+	if ok {
+		hasBg = true
+	}
+
+	mod, ok := mm[style.Modifier]
+	if ok {
+		hasMod = true
+	}
+	if hasFg {
+		out = fmt.Sprintf("%s%s%s", tokenFg, tokenValueSeparator, fg)
+	}
+
+	if hasBg {
+		if len(out) > 0 {
+			out = fmt.Sprintf("%s%s%s%s%s", out, tokenItemSeparator, tokenBg, tokenValueSeparator, bg)
+		} else {
+			out = fmt.Sprintf("%s%s%s", tokenBg, tokenValueSeparator, bg)
+		}
+	}
+
+	if hasMod {
+		if len(out) > 0 {
+			out = fmt.Sprintf("%s%s%s%s%s", out, tokenItemSeparator, tokenBg, tokenValueSeparator, mod)
+		} else {
+			out = fmt.Sprintf("%s%s%s", tokenModifier, tokenValueSeparator, mod)
+		}
+	}
+
+	if len(out) > 0 {
+		return fmt.Sprintf("(%s)", out)
+	}
+
+	return out
 }
 
 // readStyle translates an []rune like `fg:red,mod:bold,bg:white` to a style
@@ -118,7 +167,7 @@ func ParseStyles(s string, defaultStyle Style) []Cell {
 	for i, _rune := range runes {
 		switch state {
 		case parserStateDefault:
-			if _rune == tokenBeginStyledText {
+			if _rune == TokenBeginStyledText {
 				state = parserStateStyledText
 				squareCount = 1
 				styledText = append(styledText, _rune)
@@ -135,7 +184,7 @@ func ParseStyles(s string, defaultStyle Style) []Cell {
 				default:
 					rollback()
 					switch _rune {
-					case tokenBeginStyledText:
+					case TokenBeginStyledText:
 						state = parserStateStyledText
 						squareCount = 1
 						styleItems = append(styleItems, _rune)
@@ -146,10 +195,10 @@ func ParseStyles(s string, defaultStyle Style) []Cell {
 			case len(runes) == i+1:
 				rollback()
 				styledText = append(styledText, _rune)
-			case _rune == tokenBeginStyledText:
+			case _rune == TokenBeginStyledText:
 				squareCount++
 				styledText = append(styledText, _rune)
-			case _rune == tokenEndStyledText:
+			case _rune == TokenEndStyledText:
 				squareCount--
 				styledText = append(styledText, _rune)
 			default:
