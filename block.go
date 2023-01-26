@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"image"
 	"sync"
+
+	uuid "github.com/satori/go.uuid"
 )
 
 // Block is the base struct inherited by most widgets.
@@ -29,6 +31,7 @@ type Block struct {
 	TitleStyle Style
 
 	sync.Mutex
+	name string
 }
 
 func NewBlock() *Block {
@@ -111,4 +114,20 @@ func (self *Block) MakeGlamourTitle(title string) {
 		string(VERTICAL_LEFT),
 		title,
 		string(VERTICAL_RIGHT))
+}
+
+func (self *Block) GetName() string {
+	return self.name
+}
+
+func (self *Block) SetName(name string) {
+	self.name = name
+}
+
+func (self *Block) SetUUIDName() {
+	self.name = uuid.NewV4().String()
+}
+
+func (self *Block) SetBeginTitle() {
+	self.MakeGlamourTitle("No data")
 }

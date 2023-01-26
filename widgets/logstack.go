@@ -3,7 +3,6 @@ package widgets
 import (
 	"container/list"
 	. "github.com/kallaurru/termui/v3"
-	uuid "github.com/satori/go.uuid"
 	"image"
 )
 
@@ -14,7 +13,6 @@ const (
 
 type LogStack struct {
 	Block
-	id     string
 	depth  uint8 // кол-во линий отображаемых для пользователя
 	stack  *list.List
 	fields []int
@@ -30,7 +28,6 @@ func NewLogStack(depth ...uint8) *LogStack {
 	}
 	ls := &LogStack{
 		Block:  *NewBlock(),
-		id:     uuid.NewV4().String(),
 		depth:  d,
 		stack:  list.New(),
 		fields: []int{16, 4, -1}, // 0 и -1 можно ставить на поля в строках которых нет описания стилей
@@ -44,11 +41,11 @@ func NewLogStack(depth ...uint8) *LogStack {
 /** ИНТЕРФЕЙС Widget */
 
 func (ls *LogStack) GetId() string {
-	return ls.id
+	return ls.Block.GetName()
 }
 
 func (ls *LogStack) SetId(name string) {
-	ls.id = name
+	ls.Block.SetName(name)
 }
 
 func (ls *LogStack) AddInfoLogRecord(message string) {
