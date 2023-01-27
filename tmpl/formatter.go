@@ -28,6 +28,7 @@ func FormatStrAsMarkers(in string, asSquared bool) string {
 }
 
 func FormatStrWithStyle(in string, style termui.Style) string {
+
 	styleStr := termui.StyleToString(style)
 	if len(styleStr) > 0 {
 		return fmt.Sprintf(
