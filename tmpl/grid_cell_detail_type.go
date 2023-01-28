@@ -44,7 +44,7 @@ func (cd *CellDetail) SetName(name string) {
 	cd.name = name
 }
 
-func (cd *CellDetail) SetWidget(widget Drawable) {
+func (cd *CellDetail) SetWidget(widget interface{}) {
 	cd.setData(widget)
 }
 

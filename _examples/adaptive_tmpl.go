@@ -185,9 +185,9 @@ func makeList() *widgets.List {
 func makeCellDetail(row, col uint8, size ui.AdaptiveSize, isWidget bool, data interface{}) *tmpl.CellDetail {
 	cd := tmpl.NewCellDetail(row, col, size)
 	if isWidget {
-		w, ok := data.(ui.Drawable)
+		_, ok := data.(ui.Drawable)
 		if ok {
-			cd.SetWidget(w)
+			cd.SetWidget(data)
 			return cd
 		}
 	}
