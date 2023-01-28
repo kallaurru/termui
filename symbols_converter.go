@@ -135,8 +135,8 @@ func makeMapCircleLat() map[int32]int32 {
 func makeMapSquaredLat() map[int32]int32 {
 	var (
 		convMap              = make(map[int32]int32)
-		startKeyNumber int32 = 0x1f130
-		startValNumber int32 = 0x24b6
+		startKeyNumber int32 = 0x0041
+		startValNumber int32 = 0x1f130
 		count                = 26
 	)
 

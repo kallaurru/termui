@@ -3,7 +3,6 @@ package tmpl
 import (
 	"container/list"
 	. "github.com/kallaurru/termui/v3"
-	. "github.com/kallaurru/termui/v3/widgets"
 	"sync"
 )
 

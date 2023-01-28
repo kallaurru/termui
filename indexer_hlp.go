@@ -1,4 +1,4 @@
-package tmpl
+package termui
 
 const (
 	TYPE_INDEXER_TABLE_CELL    uint8 = 0x00 // address - param_number:row:col
@@ -15,7 +15,7 @@ func ApproveIndexerAddress(iType uint8, address ...uint32) bool {
 		return true
 	}
 
-	if iType == TYPE_INDEXER_PARAM_IN_TEXT && len(address) == 3 {
+	if iType == TYPE_INDEXER_PARAM_IN_TEXT && len(address) == 1 {
 		return true
 	}
 
@@ -39,7 +39,7 @@ func MakeIndexerAddress(iType uint8, addrElements ...uint32) uint32 {
 	case 3:
 		param := addrElements[0] << 16
 		row := addrElements[1] << 8
-		col := addrElements[1]
+		col := addrElements[2]
 
 		return param | row | col
 	}

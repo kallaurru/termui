@@ -57,9 +57,9 @@ func (gs *GridSchema) AddCell(rowInSchema uint8, cd *CellDetail) {
 	gs.addCell(rowInSchema, cd)
 }
 
-func (gs *GridSchema) AddSchema(row uint8, schema *GridSchema) {
+func (gs *GridSchema) AddSchema(rowInSchema uint8, schema *GridSchema) {
 	gs.mergeWidgets(schema)
-	gs.addCell(row, schema)
+	gs.addCell(rowInSchema, schema)
 }
 
 // Build - по количеству строк в схеме

@@ -1,4 +1,4 @@
-package tmpl
+package termui
 
 import (
 	"fmt"
@@ -8,12 +8,14 @@ import (
 type Indexer struct {
 	iType uint8 // ячейка в таблице. Полный адрес ячейка:строка:колонка
 	idx   map[uint32]string
+	cols  uint8
 }
 
-func NewCellIndexer() *Indexer {
+func NewCellIndexer(cols uint8) *Indexer {
 	return &Indexer{
 		iType: TYPE_INDEXER_TABLE_CELL,
 		idx:   make(map[uint32]string),
+		cols:  cols,
 	}
 }
 
@@ -21,6 +23,7 @@ func NewRowIndexer() *Indexer {
 	return &Indexer{
 		iType: TYPE_INDEXER_LIST_ROW,
 		idx:   make(map[uint32]string),
+		cols:  0,
 	}
 }
 
@@ -28,6 +31,7 @@ func NewTextParamIndexer() *Indexer {
 	return &Indexer{
 		iType: TYPE_INDEXER_PARAM_IN_TEXT,
 		idx:   make(map[uint32]string),
+		cols:  0,
 	}
 }
 
