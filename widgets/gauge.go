@@ -27,7 +27,7 @@ func NewGauge() *Gauge {
 	}
 }
 
-func (self *Gauge) UploadTheme(gt GaugeTheme) {
+func (self *Gauge) UploadTheme(gt *GaugeTheme) {
 	self.LabelStyle = gt.Label
 	self.BarColor = gt.Label.Fg
 }
