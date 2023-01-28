@@ -35,3 +35,12 @@ func NewDefWidgetTheme() *WidgetTheme {
 		activeBorderStyle: NewStyle(ColorGreenBlue),
 	}
 }
+
+func NewMyDefaultWidgetTheme() *WidgetTheme {
+	return &WidgetTheme{
+		titleStyle:        NewStyle(ColorWhite),
+		borderStyle:       NewStyle(ColorWhite),
+		activeTitleStyle:  NewStyle(ColorGreenBlue, ModifierBold),
+		activeBorderStyle: NewStyle(ColorGreenBlue),
+	}
+}

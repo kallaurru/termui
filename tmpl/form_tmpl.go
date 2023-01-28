@@ -66,7 +66,7 @@ func NewFormTmpl(isRealBuf bool, schema *GridSchema) *FormTmpl {
 }
 
 func (ft *FormTmpl) AddTitle(title string) *FormTmpl {
-	ft.Title = title
+	ft.Block.MakeGlamourTitle(title)
 
 	return ft
 }

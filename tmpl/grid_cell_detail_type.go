@@ -9,10 +9,10 @@ import (
 const errorMsg = "unknown type"
 
 type CellDetail struct {
-	idx  uint16 // индекс колонки
-	size AdaptiveSize
-	name string      // имя для идентификации виджета на форме
-	data interface{} // или Drawable или *GridSchema
+	idx  uint16       // индекс колонки
+	size AdaptiveSize // ширина колонки
+	name string       // имя для идентификации виджета на форме
+	data interface{}  // или Drawable или *GridSchema
 }
 
 func NewCellDetail(row, col uint8, size AdaptiveSize) *CellDetail {
