@@ -27,6 +27,16 @@ func NewGauge() *Gauge {
 	}
 }
 
+func (self *Gauge) UploadTheme(gt GaugeTheme) {
+	self.LabelStyle = gt.Label
+	self.BarColor = gt.Label.Fg
+}
+
+func (self *Gauge) UploadWidgetTheme(wt *WidgetTheme, isActive bool) {
+	self.Block.BorderStyle = wt.GetBorderStyle(isActive)
+	self.Block.TitleStyle = wt.GetTitleStyle(isActive)
+}
+
 func (self *Gauge) Draw(buf *Buffer) {
 	self.Block.Draw(buf)
 
