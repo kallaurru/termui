@@ -87,7 +87,7 @@ func (i *Indexer) ToTable(rows, cols uint8) [][]string {
 					continue
 				}
 				if len(paramsCache) > 0 {
-					str := i.makeStr(ip+1, paramsCache, false)
+					str := i.makeStr(ip, paramsCache, false)
 					rowData = append(rowData, str)
 				}
 				break
@@ -95,7 +95,8 @@ func (i *Indexer) ToTable(rows, cols uint8) [][]string {
 		}
 		out = append(out, rowData)
 	}
-	return [][]string{}
+
+	return out
 }
 
 func (i *Indexer) ToList(rows uint8) []string {
