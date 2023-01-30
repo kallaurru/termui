@@ -1,5 +1,10 @@
 package termui
 
+import (
+	"fmt"
+	"strings"
+)
+
 const (
 	TYPE_INDEXER_TABLE_CELL    uint8 = 0x00 // address - param_number:row:col
 	TYPE_INDEXER_LIST_ROW      uint8 = 0x01 // address - param_number:row
@@ -22,6 +27,24 @@ func ApproveIndexerAddress(iType uint8, address ...uint32) bool {
 	return false
 }
 
+func MakeDataProviderAddress(param, row, col uint32) uint32 {
+	var address uint32 = 0
+	if param+row+col == 0 {
+		return address
+	}
+	if param > 0 {
+		address |= param << 16
+	}
+	if row > 0 {
+		address |= row << 8
+	}
+
+	address |= col
+
+	return address
+}
+
+// MakeIndexerAddress @deprecated
 func MakeIndexerAddress(iType uint8, addrElements ...uint32) uint32 {
 	ok := ApproveIndexerAddress(iType, addrElements...)
 	if !ok {
@@ -45,4 +68,17 @@ func MakeIndexerAddress(iType uint8, addrElements ...uint32) uint32 {
 	}
 
 	return 0
+}
+
+func MakeStr(countParams uint8, data []interface{}, useSplit32 bool) string {
+	var formatStr string
+
+	if useSplit32 {
+		formatStr = strings.Repeat("%s ", int(countParams))
+		formatStr = strings.TrimRight(formatStr, " ")
+	} else {
+		formatStr = strings.Repeat("%s", int(countParams))
+	}
+
+	return fmt.Sprintf(formatStr, data...)
 }
