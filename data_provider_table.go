@@ -53,32 +53,31 @@ func (dpt *DataProviderTable) GetRow(row int) []string {
 
 func (dpt *DataProviderTable) AddData(data string, row, col, param uint32) *DataProviderTable {
 	var (
-		newCols = uint8(row)
-		newRows = uint8(col)
+		newRows = uint8(row)
+		newCols = uint8(col)
 	)
 	address := MakeDataProviderAddress(param, row, col)
 	dpt.idx[address] = data
-	if dpt.cols < newCols {
-		dpt.cols = newCols
+	if dpt.cols < newCols+1 {
+		dpt.cols = newCols + 1
 	}
 
-	if dpt.rows < newRows {
-		dpt.rows = newRows
+	if dpt.rows < newRows+1 {
+		dpt.rows = newRows + 1
 	}
 
 	return dpt
 }
 
 func (dpt *DataProviderTable) UpdateData(data string, address ...uint32) {
-	var r, c, p uint32 = 0, 0, 0
 	var iParam int
 
-	if len(address) == 3 {
-		p = address[0]
-		r = address[1]
-		c = address[2]
-	}
+	p, r, c := dpt.getAddrElements(address...)
 
+	// проверка индексов строки и колонки
+	if !dpt.approveElementsAddress(r, c) {
+		return
+	}
 	dpt.AddData(data, r, c, p)
 
 	cacheCol := make([]interface{}, 0, 2)
@@ -103,4 +102,26 @@ func (dpt *DataProviderTable) insertInCache(row, col uint32, data string) {
 		return
 	}
 	dpt.cache[row][col] = data
+}
+
+// @address - структура приходит в след виде: строка, колонка, параметр. Проще указывать координаты визуально
+func (dpt *DataProviderTable) getAddrElements(address ...uint32) (p, r, c uint32) {
+	switch len(address) {
+	default:
+		return 0, 0, 0
+	case 1:
+		return 0, address[0], 0
+	case 2:
+		return 0, address[0], address[0]
+	case 3:
+		return address[2], address[0], address[1]
+	}
+}
+
+func (dpt *DataProviderTable) approveElementsAddress(r, c uint32) bool {
+	if uint8(r) >= dpt.rows || uint8(c) >= dpt.cols {
+		return false
+	}
+
+	return true
 }

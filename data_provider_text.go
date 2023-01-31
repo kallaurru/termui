@@ -9,7 +9,7 @@ type DataProviderText struct {
 func NewDataProviderText() *DataProviderText {
 	return &DataProviderText{
 		idx:    make(map[uint32]string),
-		params: 0,
+		params: 1,
 		cache:  "",
 	}
 }
@@ -43,5 +43,5 @@ func (dpt *DataProviderText) UpdateData(data string, address ...uint32) {
 		}
 	}
 
-	dpt.cache = MakeStr(dpt.params+1, cache, true)
+	dpt.cache = MakeStr(dpt.params, cache, true)
 }
