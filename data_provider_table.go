@@ -72,7 +72,7 @@ func (dpt *DataProviderTable) AddData(data string, row, col, param uint32) *Data
 func (dpt *DataProviderTable) UpdateData(data string, address ...uint32) {
 	var iParam int
 
-	p, r, c := dpt.getAddrElements(address...)
+	p, r, c := GetAddressElements(address...)
 
 	// проверка индексов строки и колонки
 	if !dpt.approveElementsAddress(r, c) {
@@ -102,20 +102,6 @@ func (dpt *DataProviderTable) insertInCache(row, col uint32, data string) {
 		return
 	}
 	dpt.cache[row][col] = data
-}
-
-// @address - структура приходит в след виде: строка, колонка, параметр. Проще указывать координаты визуально
-func (dpt *DataProviderTable) getAddrElements(address ...uint32) (p, r, c uint32) {
-	switch len(address) {
-	default:
-		return 0, 0, 0
-	case 1:
-		return 0, address[0], 0
-	case 2:
-		return 0, address[0], address[0]
-	case 3:
-		return address[2], address[0], address[1]
-	}
 }
 
 func (dpt *DataProviderTable) approveElementsAddress(r, c uint32) bool {

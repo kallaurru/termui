@@ -10,8 +10,12 @@ func NewDataProviderList() *DataProviderList {
 	return &DataProviderList{
 		idx:   make(map[uint32]string),
 		rows:  1,
-		cache: make([]string, 2),
+		cache: make([]string, 0, 2),
 	}
+}
+
+func (dpl *DataProviderList) SetExtTarget(t *[]string) {
+	dpl.cache = *t
 }
 
 func (dpl *DataProviderList) Caching() {
@@ -52,7 +56,7 @@ func (dpl *DataProviderList) UpdateData(data string, address ...uint32) {
 	var paramMax = 0xff // максимальное количество параметров
 	var pr int          // счетчик параметров при обходе
 
-	p, r, _ := dpl.getAddrElements(address...)
+	p, r, _ := GetAddressElements(address...)
 
 	if uint8(r) >= dpl.rows {
 		return
@@ -75,15 +79,4 @@ func (dpl *DataProviderList) UpdateData(data string, address ...uint32) {
 	str := MakeStr(uint8(pr), cacheParams, true)
 
 	dpl.cache[int(r)] = str
-}
-
-func (dpl *DataProviderList) getAddrElements(address ...uint32) (p, r, c uint32) {
-	switch len(address) {
-	default:
-		return 0, 0, 0
-	case 1:
-		return 0, address[0], 0
-	case 2:
-		return address[1], address[0], 0
-	}
 }
