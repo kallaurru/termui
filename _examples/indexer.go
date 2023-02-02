@@ -2,6 +2,7 @@ package main
 
 import (
 	. "github.com/kallaurru/termui/v3"
+	"github.com/kallaurru/termui/v3/widgets"
 	"log"
 )
 
@@ -45,11 +46,11 @@ func makeIndexerList() {
 
 	dpl.AddData("день", 3, 0)
 	dpl.Caching()
-
-	l := dpl.GetList()
+	wl := widgets.NewListES()
+	wl.Rows = dpl.GetListPtr()
 	dpl.UpdateData("год", 0, 3)
 
-	log.Println("indexer is ready", len(l))
+	log.Println("indexer is ready", len(*wl.Rows))
 
 }
 

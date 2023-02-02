@@ -42,6 +42,10 @@ func (dpl *DataProviderList) GetList() []string {
 	return dpl.cache
 }
 
+func (dpl *DataProviderList) GetListPtr() *[]string {
+	return &dpl.cache
+}
+
 func (dpl *DataProviderList) AddData(data string, param uint32, row uint32) {
 	address := MakeDataProviderAddress(param, row, 0)
 	dpl.idx[address] = data
