@@ -1,9 +1,12 @@
 package termui
 
+import "sync"
+
 type DataProviderList struct {
 	idx   map[uint32]string
 	rows  uint8
 	cache []string
+	mx    sync.RWMutex
 }
 
 func NewDataProviderList() *DataProviderList {
@@ -11,6 +14,7 @@ func NewDataProviderList() *DataProviderList {
 		idx:   make(map[uint32]string),
 		rows:  1,
 		cache: make([]string, 0, 2),
+		mx:    sync.RWMutex{},
 	}
 }
 
@@ -68,6 +72,9 @@ func (dpl *DataProviderList) UpdateData(data string, address ...uint32) {
 	if len(dpl.cache) == 0 {
 		dpl.Caching()
 	}
+	dpl.mx.Lock()
+	defer dpl.mx.Unlock()
+
 	dpl.AddData(data, p, r)
 
 	cacheParams := make([]interface{}, 0, 2)

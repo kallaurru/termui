@@ -1,10 +1,13 @@
 package termui
 
+import "sync"
+
 type DataProviderTable struct {
 	idx   map[uint32]string
 	cols  uint8      // количество колонок, если есть
 	rows  uint8      // количество строк, есть всегда
 	cache [][]string // для текста это всегда одна строка. 0 0 для текста, 0-n 0 для списка, 0-n 0-x для таблицы
+	mx    sync.RWMutex
 }
 
 func NewDataProviderTable() *DataProviderTable {
@@ -13,6 +16,7 @@ func NewDataProviderTable() *DataProviderTable {
 		cols:  1,
 		rows:  1, // в любом случае 1 строка будет всегда
 		cache: make([][]string, 0, 2),
+		mx:    sync.RWMutex{},
 	}
 }
 
@@ -78,6 +82,10 @@ func (dpt *DataProviderTable) UpdateData(data string, address ...uint32) {
 	if !dpt.approveElementsAddress(r, c) {
 		return
 	}
+	dpt.mx.Lock()
+
+	defer dpt.mx.Unlock()
+
 	dpt.AddData(data, r, c, p)
 
 	cacheCol := make([]interface{}, 0, 2)

@@ -7,8 +7,8 @@ import (
 )
 
 func main() {
-	//makeIndexerTable()
-	makeIndexerList()
+	makeIndexerTable()
+	//makeIndexerList()
 }
 
 func makeIndexerTable() {
@@ -30,11 +30,12 @@ func makeIndexerTable() {
 	dpt.AddData("месяц", 1, 2, 0)
 
 	dpt.Caching()
-	tabl := dpt.GetTable()
+	aTabl := widgets.NewATable()
+	aTabl.Rows = dpt.GetTable()
 
 	dpt.UpdateData(ConvertToMonoNumbers(999999), 1, 1, 1)
 
-	log.Println("indexer is ready", len(tabl))
+	log.Println("indexer is ready", len(aTabl.Rows))
 }
 
 func makeIndexerList() {
