@@ -128,6 +128,6 @@ func (self *Block) SetUUIDName() {
 	self.name = uuid.NewV4().String()
 }
 
-func (self *Block) SetBeginTitle() {
+func (self *Block) SetEmptyHeader() {
 	self.MakeGlamourTitle("No data")
 }
