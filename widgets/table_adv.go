@@ -54,8 +54,9 @@ func (at *ATable) AddCellAlignment(idxRow, idxCol int, alignment Alignment) {
 	}
 }
 
-// AddColAlignmentHelperTheme - желательно вызвать после того как заполнено свойство Rows
-func (at *ATable) AddColAlignmentHelperTheme() {
+// AddColAlignDefTheme - желательно вызвать после того как заполнено свойство Rows
+// подходит для таблицы в две колонки
+func (at *ATable) AddColAlignDefTheme() {
 	if at.ColTextAlignment == nil {
 		at.ColTextAlignment = make(map[int]Alignment)
 	}

@@ -131,3 +131,8 @@ func (self *Block) SetUUIDName() {
 func (self *Block) SetEmptyHeader() {
 	self.MakeGlamourTitle("No data")
 }
+
+func (self *Block) SetHeaderWithMarker(marker, suffix string) {
+	prefix := ConvertSymToMarkers(marker)
+	self.MakeGlamourTitle(fmt.Sprintf("%s %s", prefix, suffix))
+}

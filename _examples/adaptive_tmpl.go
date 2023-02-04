@@ -84,10 +84,10 @@ func main() {
 func makeSchemaCell() *tmpl.GridSchema {
 	gauge := widgets.NewGauge()
 	gauge.Percent = 10
-	gauge.BarColor = ui.ColorBlue
+	gauge.BarColor = ui.ColorBlueLightFg
 	gauge.Title = "Loaded months"
 	gauge.BorderStyle.Fg = ui.ColorWhite
-	gauge.TitleStyle.Fg = ui.ColorCyan
+	gauge.TitleStyle.Fg = ui.ColorGreenBgDunkel
 	gauge.Label = "Two month loaded"
 	gauge.LabelStyle.Fg = ui.ColorGreen
 
@@ -203,12 +203,12 @@ func makeCellDetail(row, col uint8, size ui.AdaptiveSize, isWidget bool, data in
 func makeGauge() *widgets.Gauge {
 	gauge := widgets.NewGauge()
 	gauge.Percent = 10
-	gauge.BarColor = ui.ColorCyan
-	gauge.Title = "Loaded months"
+	gauge.BarColor = ui.ColorWhite
+	gauge.Block.SetHeaderWithMarker("Y", "2023")
 	gauge.BorderStyle.Fg = ui.ColorWhite
 	gauge.TitleStyle.Fg = ui.ColorWhite
-	gauge.Label = "Two month loaded"
-	gauge.LabelStyle.Fg = ui.ColorGreen
+	gauge.Label = "1 month"
+	gauge.LabelStyle.Fg = ui.ColorGreenBgDunkel
 
 	return gauge
 }
@@ -236,7 +236,7 @@ func makeHlpPopup(parent image.Rectangle) *widgets.ATable {
 
 	table.ColumnWidths = []int{4, -1}
 
-	table.AddColAlignmentHelperTheme()
+	table.AddColAlignDefTheme()
 	table.Rows = fHlpData(&w, &h)
 
 	dim := ui.MakeCenterPositionWidget(parent, w, h)
@@ -313,7 +313,7 @@ func makeLossLimitWidget() *widgets.ATable {
 
 	table.ColumnWidths = []int{12, -1}
 
-	table.AddColAlignmentHelperTheme()
+	table.AddColAlignDefTheme()
 	table.Rows = [][]string{
 		{"[Limits:](fg:white,mod:bold)", "[Loss limits](fg:white,mod:bold)"},
 		{"[-> D:](fg:white,mod:bold)", "[400](fg:red,mod:bold)"},

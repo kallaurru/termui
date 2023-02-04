@@ -68,6 +68,10 @@ func NewStyle(fg Color, args ...interface{}) Style {
 	}
 }
 
+func NewStyleBgFree(fg Color, mod Modifier) Style {
+	return NewStyle(fg, ColorClear, mod)
+}
+
 func NewStyleFromStyleCode(code uint32) Style {
 	// 1 << 24 fg = -1
 	// 1 << 25 bg = -1

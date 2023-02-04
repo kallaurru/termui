@@ -188,10 +188,11 @@ func CellsToString(cells []Cell) string {
 }
 
 func TrimCells(cells []Cell, w int) []Cell {
+	var newCells []Cell
+
 	s := CellsToString(cells)
 	s = TrimString(s, w)
 	runes := []rune(s)
-	newCells := []Cell{}
 	for i, r := range runes {
 		newCells = append(newCells, Cell{r, cells[i].Style})
 	}
@@ -199,8 +200,11 @@ func TrimCells(cells []Cell, w int) []Cell {
 }
 
 func SplitCells(cells []Cell, r rune) [][]Cell {
-	splitCells := [][]Cell{}
-	temp := []Cell{}
+	var (
+		splitCells [][]Cell
+		temp       []Cell
+	)
+
 	for _, cell := range cells {
 		if cell.Rune == r {
 			splitCells = append(splitCells, temp)

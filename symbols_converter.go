@@ -5,6 +5,17 @@ import (
 	"strings"
 )
 
+// ConvertToRomeNumbers Актуальны числа от 1 до 12
+func ConvertToRomeNumbers(in int32, isLow bool) string {
+	m := makeMapRomeNumbers(isLow)
+	val, ok := m[in]
+	if ok {
+		return string(val)
+	}
+
+	return ""
+}
+
 func ConvertToMonoNumbers(in int32) string {
 	m := makeMapMonoNumbers()
 
@@ -86,6 +97,27 @@ func makeMapMonoNumbers() map[int32]int32 {
 	for i := 0; i < count; i++ {
 		diff := int32(i)
 		convMap[startLatNumber+diff] = startMonoNumber + diff
+	}
+
+	return convMap
+}
+
+func makeMapRomeNumbers(isLow bool) map[int32]int32 {
+	var (
+		convMap              = make(map[int32]int32)
+		startLatNumber int32 = 1
+		upperNumbers   int32 = 0x2160
+		lowNumbers     int32 = 0x2170
+		count                = 12
+	)
+
+	for i := 0; i < count; i++ {
+		diff := int32(i)
+		if isLow {
+			convMap[startLatNumber+diff] = lowNumbers + diff
+		} else {
+			convMap[startLatNumber+diff] = upperNumbers + diff
+		}
 	}
 
 	return convMap

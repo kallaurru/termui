@@ -2,12 +2,50 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"github.com/kallaurru/termui/v3"
 	"github.com/kallaurru/termui/v3/widgets"
 	"log"
 )
 
 func main() {
+	// formatter test
+	amount := "17777777"
+	amount2 := "83832"
+
+	// example format length string
+	fmt.Printf(
+		"%5s %14s %5s -%s\n",
+		"POSI",
+		amount,
+		"100",
+		"21")
+	fmt.Printf(
+		"%5s %14s %5s -%s\n",
+		"OZON",
+		amount2,
+		"11",
+		"1")
+}
+
+func mainOld2() {
+	st := termui.NewStyleBgFree(termui.ColorWhite, termui.ModifierBold)
+	in := "Ljdskjfksjl slkdjfskl"
+
+	fstr := termui.FormatStrWithStyle(in, st)
+
+	fmt.Printf("%s", fstr)
+	amount := int32(398729)
+	decimal := int32(9)
+
+	sumStr := termui.FormatAmount(amount, decimal, true, true)
+	sumStr = termui.FormatAmount(amount, decimal, false, false)
+	decimal2 := int32(90)
+	sumStr = termui.FormatAmount(amount, decimal2, true, false)
+	fmt.Println(sumStr)
+}
+
+func mainOld() {
 	mw := make(map[string]interface{})
 	mdp := make(map[string]interface{})
 

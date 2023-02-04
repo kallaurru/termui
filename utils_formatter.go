@@ -4,8 +4,26 @@ import (
 	"fmt"
 )
 
-func FormatAmount(amount int32, isMono bool, addCurSym bool) string {
-	var amountStr string
+func FormatAmount(amount, decimal int32, isMono bool, addCurSym bool) string {
+	var amountStr, decimalStr string
+
+	if decimal < 0 {
+		decimal = 0
+	}
+	if decimal < 10 {
+		if isMono {
+			decimalStr = fmt.Sprintf("%s%s", ConvertToMonoNumbers(0), ConvertToMonoNumbers(decimal))
+		} else {
+			decimalStr = fmt.Sprintf("%s%s", ConvertToFullNumbers(0), ConvertToFullNumbers(decimal))
+		}
+	} else {
+		if isMono {
+			decimalStr = ConvertToMonoNumbers(decimal)
+		} else {
+			decimalStr = ConvertToFullNumbers(decimal)
+		}
+	}
+
 	if isMono {
 		amountStr = ConvertToMonoNumbers(amount)
 	} else {
@@ -13,9 +31,9 @@ func FormatAmount(amount int32, isMono bool, addCurSym bool) string {
 	}
 
 	if addCurSym {
-		return fmt.Sprintf("%s%s", string(RUR), amountStr)
+		return fmt.Sprintf("%s%s,%s", string(RUR), amountStr, decimalStr)
 	}
-	return amountStr
+	return fmt.Sprintf("%s,%s", amountStr, decimalStr)
 }
 
 func FormatStrAsMarkers(in string, asSquared bool) string {
