@@ -5,15 +5,44 @@ import (
 	"strings"
 )
 
-// ConvertToRomeNumbers Актуальны числа от 1 до 12
-func ConvertToRomeNumbers(in int32, isLow bool) string {
-	m := makeMapRomeNumbers(isLow)
-	val, ok := m[in]
-	if ok {
-		return string(val)
+// ConvertToRomeNumbers Актуальны числа от 1 до 12, 50, 100, 500, 1000
+func ConvertToRomeNumbers(in int32) string {
+	switch in {
+	case 1:
+		return string(ROME_1)
+	case 2:
+		return string(ROME_2)
+	case 3:
+		return string(ROME_3)
+	case 4:
+		return string(ROME_4)
+	case 5:
+		return string(ROME_5)
+	case 6:
+		return string(ROME_6)
+	case 7:
+		return string(ROME_7)
+	case 8:
+		return string(ROME_8)
+	case 9:
+		return string(ROME_9)
+	case 10:
+		return string(ROME_10)
+	case 11:
+		return string(ROME_11)
+	case 12:
+		return string(ROME_12)
+	case 50:
+		return string(ROME_50)
+	case 100:
+		return string(ROME_100)
+	case 500:
+		return string(ROME_500)
+	case 1000:
+		return string(ROME_1000)
+	default:
+		return ""
 	}
-
-	return ""
 }
 
 func ConvertToMonoNumbers(in int32) string {
@@ -97,27 +126,6 @@ func makeMapMonoNumbers() map[int32]int32 {
 	for i := 0; i < count; i++ {
 		diff := int32(i)
 		convMap[startLatNumber+diff] = startMonoNumber + diff
-	}
-
-	return convMap
-}
-
-func makeMapRomeNumbers(isLow bool) map[int32]int32 {
-	var (
-		convMap              = make(map[int32]int32)
-		startLatNumber int32 = 1
-		upperNumbers   int32 = 0x2160
-		lowNumbers     int32 = 0x2170
-		count                = 12
-	)
-
-	for i := 0; i < count; i++ {
-		diff := int32(i)
-		if isLow {
-			convMap[startLatNumber+diff] = lowNumbers + diff
-		} else {
-			convMap[startLatNumber+diff] = upperNumbers + diff
-		}
 	}
 
 	return convMap

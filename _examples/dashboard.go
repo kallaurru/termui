@@ -21,12 +21,16 @@ func main() {
 	t := widgets.NewATable()
 	t.RowSeparator = false
 	t.ColSeparator = false
-	t.ColumnWidths = []int{3, 3, 3, 3}
-	t.AddColAlignment(0, termui.AlignCenter)
+	t.ColumnWidths = []int{1, 3, 3, 3, 3}
+
+	t.AddColAlignment(0, termui.AlignLeft)
 	t.AddColAlignment(1, termui.AlignCenter)
 	t.AddColAlignment(2, termui.AlignCenter)
+	t.AddColAlignment(3, termui.AlignCenter)
+	t.AddColAlignment(4, termui.AlignCenter)
+
 	maxX, maxY := termui.TerminalDimensions()
-	w, h := 40, 8
+	w, h := 40, 4
 	parent := image.Rect(0, 0, maxX, maxY)
 	dim := termui.MakeCenterPositionWidget(parent, w, h)
 
@@ -56,7 +60,7 @@ func main() {
 			} else {
 				current += 1
 			}
-			dp.UpdateData(makeDashboardItem(int32(current)), 1, 0, 0)
+			dp.UpdateData(makeDashboardItem(int32(current)), 1, 1, 0)
 			termui.Render(t)
 
 		}
@@ -67,30 +71,42 @@ func main() {
 func makeDashboardDP() *termui.DataProviderTable {
 	dpt := termui.NewDataProviderTable()
 	dpt.AddData(
-		makeDashboardItem(0x33da),
+		termui.FormatStrWithStyle(
+			string(termui.SHADED_BLOCKS[4]), termui.NewStyle(termui.ColorRed)),
 		0,
 		0,
 		0)
 	dpt.AddData(
-		makeDashboardItem(0x269d),
+		makeDashboardItem(int32(0x231b)),
 		0,
 		1,
 		0)
 	dpt.AddData(
-		makeDashboardItem(0x20ad),
+		makeDashboardItem(int32(0x1f4a2)),
 		0,
 		2,
 		0)
 	dpt.AddData(
-		makeDashboardItem(0x2180),
+		makeDashboardItem(int32(0x1f340)),
 		0,
 		3,
 		0)
+	dpt.AddData(
+		string(int32(0x1f463)),
+		0,
+		4,
+		0)
 
-	dpt.AddData(makeDashboardItem(0x2581), 1, 0, 0)
-	dpt.AddData(makeDashboardItem(0x216d), 1, 1, 0)
-	dpt.AddData(makeDashboardItem(0x2592), 1, 2, 0)
-	dpt.AddData(makeDashboardItem(0x33ff), 1, 3, 0)
+	dpt.AddData(
+		termui.FormatStrWithStyle(
+			string(termui.SHADED_BLOCKS[4]), termui.NewStyle(termui.ColorRed)),
+		1,
+		0,
+		0)
+	dpt.AddData(makeDashboardItem(0x2581), 1, 1, 0)
+	dpt.AddData(string(termui.SHEKEL), 1, 2, 0)
+	dpt.AddData(string('☰'), 1, 3, 0)
+	dpt.AddData(string([]int32{termui.NUMBER_BOLD_0, termui.NUMBER_BOLD_2}), 1, 4, 0)
 
 	dpt.Caching()
 	return dpt

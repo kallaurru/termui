@@ -12,8 +12,10 @@ const (
 	COLLAPSED        = '+'
 	EXPANDED         = '−'
 	EMPTY      int32 = ' '
-	RUR        int32 = '\u20b6'
-	SHEKEL     int32 = '\u20aa'
+	RUR        int32 = '₽'
+	SHEKEL     int32 = '₪'
+	LAOS_KIP   int32 = '₭'
+	LIGHTCOIN  int32 = 'Ł'
 	SYMBOL_YAT int32 = 'Ѣ'
 
 	CHECK_DEFAULT   int32 = '✓'
@@ -47,6 +49,57 @@ const (
 	ROME_100  int32 = 'Ⅽ'
 	ROME_500  int32 = 'Ⅾ'
 	ROME_1000 int32 = 'Ⅿ'
+
+	NUMBER_BOLD_0 int32 = '𝟬'
+	NUMBER_BOLD_1 int32 = '𝟭'
+	NUMBER_BOLD_2 int32 = '𝟮'
+	NUMBER_BOLD_3 int32 = '𝟯'
+	NUMBER_BOLD_4 int32 = '𝟰'
+	NUMBER_BOLD_5 int32 = '𝟱'
+	NUMBER_BOLD_6 int32 = '𝟲'
+	NUMBER_BOLD_7 int32 = '𝟳'
+	NUMBER_BOLD_8 int32 = '𝟴'
+	NUMBER_BOLD_9 int32 = '𝟵'
+
+	/*
+		color symbols
+	*/
+
+	CS_FOOTPRINT        int32 = '👣'
+	CS_FOOTPRINT_ANIMAL int32 = '🐾'
+	CS_CLOVER_4_LIST    int32 = '🍀'
+	CS_ANGER            int32 = '💢'
+	CS_EYES             int32 = '👀'
+	CS_HOURGLASS        int32 = '⌛'
+	CS_COFFEE           int32 = '☕'
+	CS_SHOWING          int32 = '🌨'
+	CS_FIRE             int32 = '🔥'
+	CS_FIRE_ENGINE      int32 = '🚒'
+	CS_ROCKET           int32 = '🚀'
+	CS_DIZZINESS        int32 = '💫'
+	CS_BUMP             int32 = '💥'
+	CS_NOTES            int32 = '🎶'
+	CS_BEEPER           int32 = '📯'
+
+	/*
+		triangles
+	*/
+	TRIA_TOP_L    int32 = '◸'
+	TRIA_TOP_R    int32 = '◹'
+	TRIA_BOTTOM_L int32 = '◺'
+	TRIA_BOTTOM_R int32 = '◿'
+
+	/*
+		i-chin
+	*/
+	I_CHIN_1 int32 = '☰'
+	I_CHIN_2 int32 = '☱'
+	I_CHIN_3 int32 = '☲'
+	I_CHIN_4 int32 = '☳'
+	I_CHIN_5 int32 = '☴'
+	I_CHIN_6 int32 = '☵'
+	I_CHIN_7 int32 = '☶'
+	I_CHIN_8 int32 = '☷'
 )
 
 var (
