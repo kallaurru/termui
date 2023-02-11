@@ -3,21 +3,28 @@ package termui
 import "sync"
 
 type DataProviderTable struct {
-	idx   map[uint32]string
-	cols  uint8      // количество колонок, если есть
-	rows  uint8      // количество строк, есть всегда
-	cache [][]string // для текста это всегда одна строка. 0 0 для текста, 0-n 0 для списка, 0-n 0-x для таблицы
-	mx    sync.RWMutex
+	idx      map[uint32]string
+	cols     uint8      // количество колонок, если есть
+	rows     uint8      // количество строк, есть всегда
+	cache    [][]string // для текста это всегда одна строка. 0 0 для текста, 0-n 0 для списка, 0-n 0-x для таблицы
+	mx       sync.RWMutex
+	useSplit bool
 }
 
 func NewDataProviderTable() *DataProviderTable {
 	return &DataProviderTable{
-		idx:   make(map[uint32]string),
-		cols:  1,
-		rows:  1, // в любом случае 1 строка будет всегда
-		cache: make([][]string, 0, 2),
-		mx:    sync.RWMutex{},
+		idx:      make(map[uint32]string),
+		cols:     1,
+		rows:     1, // в любом случае 1 строка будет всегда
+		cache:    make([][]string, 0, 2),
+		mx:       sync.RWMutex{},
+		useSplit: false,
 	}
+}
+
+func (dpt *DataProviderTable) UseSplit32() *DataProviderTable {
+	dpt.useSplit = true
+	return dpt
 }
 
 func (dpt *DataProviderTable) Caching() {
@@ -35,7 +42,7 @@ func (dpt *DataProviderTable) Caching() {
 				}
 				cacheCol = append(cacheCol, val)
 			}
-			colStr := MakeStr(uint8(p), cacheCol, false)
+			colStr := MakeStr(uint8(p), cacheCol, dpt.useSplit)
 			cacheRow = append(cacheRow, colStr)
 		}
 		cache = append(cache, cacheRow)
@@ -97,7 +104,7 @@ func (dpt *DataProviderTable) UpdateData(data string, address ...uint32) {
 		}
 		cacheCol = append(cacheCol, val)
 	}
-	colStr := MakeStr(uint8(iParam), cacheCol, false)
+	colStr := MakeStr(uint8(iParam), cacheCol, dpt.useSplit)
 	dpt.insertInCache(r, c, colStr)
 }
 

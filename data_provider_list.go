@@ -7,14 +7,32 @@ type DataProviderList struct {
 	rows  uint8
 	cache []string
 	mx    sync.RWMutex
+	// ширина поля под параметр. Распространяется на параметры с одинаковым индексом во всех строках.
+	// поля где ширина не важна можно пропустить установив 0
+	width    []uint8 // ширина поля под параметр.
+	useSplit bool    // использовать разделитель пробел между параметрами
 }
 
 func NewDataProviderList() *DataProviderList {
 	return &DataProviderList{
-		idx:   make(map[uint32]string),
-		rows:  1,
-		cache: make([]string, 0, 2),
-		mx:    sync.RWMutex{},
+		idx:      make(map[uint32]string),
+		rows:     1,
+		cache:    make([]string, 0, 2),
+		mx:       sync.RWMutex{},
+		width:    []uint8{0},
+		useSplit: false,
+	}
+}
+
+func (dpl *DataProviderList) UseSplit32() *DataProviderList {
+	dpl.useSplit = true
+	return dpl
+}
+
+func (dpl *DataProviderList) SetWidthParams(width []uint8) {
+	dpl.width = make([]uint8, len(width), len(width))
+	for idx, w := range width {
+		dpl.width[idx] = w
 	}
 }
 
@@ -24,6 +42,9 @@ func (dpl *DataProviderList) SetExtTarget(t *[]string) {
 
 func (dpl *DataProviderList) Caching() {
 	var p, r int
+	var str string
+
+	hasWR := dpl.width[0] > 0
 
 	cache := make([]string, 0, 2)
 	for r = 0; r < int(dpl.rows); r++ {
@@ -36,7 +57,11 @@ func (dpl *DataProviderList) Caching() {
 			}
 			paramsCache = append(paramsCache, val)
 		}
-		str := MakeStr(uint8(len(paramsCache)), paramsCache, true)
+		if hasWR {
+			str = MakeStrStaticW(paramsCache, dpl.width, dpl.useSplit)
+		} else {
+			str = MakeStr(uint8(len(paramsCache)), paramsCache, dpl.useSplit)
+		}
 		cache = append(cache, str)
 	}
 	dpl.cache = cache
@@ -87,7 +112,13 @@ func (dpl *DataProviderList) UpdateData(data string, address ...uint32) {
 		}
 		cacheParams = append(cacheParams, value)
 	}
-	str := MakeStr(uint8(pr), cacheParams, true)
+	hasWR := dpl.width[0] > 0
+	str := ""
+	if hasWR {
+		str = MakeStrStaticW(cacheParams, dpl.width, dpl.useSplit)
+	} else {
+		str = MakeStr(uint8(pr), cacheParams, dpl.useSplit)
+	}
 
 	dpl.cache[int(r)] = str
 }

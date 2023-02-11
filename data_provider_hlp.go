@@ -53,3 +53,30 @@ func MakeStr(countParams uint8, data []interface{}, useSplit32 bool) string {
 
 	return fmt.Sprintf(formatStr, data...)
 }
+
+func MakeStrStaticW(data []interface{}, rw []uint8, useSplit32 bool) string {
+	var formatStr, item string
+
+	countParams := len(data)
+	if countParams == 0 {
+		return ""
+	}
+
+	lRW := len(rw)
+	formatArr := make([]string, 0, 2)
+	for i := 0; i < countParams; i++ {
+		if i < lRW && rw[i] > 0 {
+			item = fmt.Sprintf("%%%ds", rw[i])
+		} else {
+			item = "%s"
+		}
+		formatArr = append(formatArr, item)
+	}
+	if useSplit32 {
+		formatStr = strings.Join(formatArr, " ")
+	} else {
+		formatStr = strings.Join(formatArr, "")
+	}
+
+	return fmt.Sprintf(formatStr, data...)
+}
