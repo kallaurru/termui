@@ -15,7 +15,7 @@ const (
 	RUR        int32 = '₽'
 	SHEKEL     int32 = '₪'
 	LAOS_KIP   int32 = '₭'
-	LIGHTCOIN  int32 = 'Ł'
+	LIGHT_COIN int32 = 'Ł'
 	SYMBOL_YAT int32 = 'Ѣ'
 
 	CHECK_DEFAULT   int32 = '✓'
