@@ -5,6 +5,41 @@ import (
 	"strings"
 )
 
+func ConvertToBoldNumbers(in int32) string {
+	cache := make([]int32, 0, 2)
+
+	line := []rune(strconv.Itoa(int(in)))
+	if in < 0 {
+		cache = append(cache, EXPANDED)
+	}
+
+	for _, code := range line {
+		switch code {
+		case 0x0030:
+			cache = append(cache, NUMBER_BOLD_0)
+		case 0x0031:
+			cache = append(cache, NUMBER_BOLD_1)
+		case 0x0032:
+			cache = append(cache, NUMBER_BOLD_2)
+		case 0x0033:
+			cache = append(cache, NUMBER_BOLD_3)
+		case 0x0034:
+			cache = append(cache, NUMBER_BOLD_4)
+		case 0x0035:
+			cache = append(cache, NUMBER_BOLD_5)
+		case 0x0036:
+			cache = append(cache, NUMBER_BOLD_6)
+		case 0x0037:
+			cache = append(cache, NUMBER_BOLD_7)
+		case 0x0038:
+			cache = append(cache, NUMBER_BOLD_8)
+		case 0x0039:
+			cache = append(cache, NUMBER_BOLD_9)
+		}
+	}
+	return string(cache)
+}
+
 // ConvertToRomeNumbers Актуальны числа от 1 до 12, 50, 100, 500, 1000
 func ConvertToRomeNumbers(in int32) string {
 	switch in {
