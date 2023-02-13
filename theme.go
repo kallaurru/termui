@@ -204,7 +204,7 @@ func NewMyDefaultWidgetTheme() *WidgetTheme {
 	return &WidgetTheme{
 		titleStyle:        NewStyle(ColorWhite),
 		borderStyle:       NewStyle(ColorWhite),
-		activeTitleStyle:  NewStyle(ColorGreenBlue, ModifierBold),
+		activeTitleStyle:  NewStyle(ColorGreenBlue, ColorClear, ModifierBold),
 		activeBorderStyle: NewStyle(ColorGreenBlue),
 	}
 }
