@@ -53,12 +53,10 @@ var StyleClear = Style{
 // 2nd argument = optional Bg
 // 3rd argument = optional Modifier
 func NewStyle(fg Color, args ...interface{}) Style {
-	bg := ColorClear
-	modifier := ModifierClear
 	st := Style{
 		Fg:       fg,
-		Bg:       bg,
-		Modifier: modifier,
+		Bg:       ColorClear,
+		Modifier: ModifierClear,
 	}
 	if len(args) >= 1 {
 		_, isColor := args[0].(Color)
@@ -66,7 +64,7 @@ func NewStyle(fg Color, args ...interface{}) Style {
 			st.Bg = args[0].(Color)
 		} else {
 			// что бы можно было добавить модификатор не меняя родного bg терминала
-			st.Modifier = args[1].(Modifier)
+			st.Modifier = args[0].(Modifier)
 		}
 
 		return st
