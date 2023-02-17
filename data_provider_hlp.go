@@ -41,6 +41,12 @@ func MakeDataProviderAddress(param, row, col uint32) uint32 {
 	return address
 }
 
+// ParseDataProviderAddress - порядок элементов возврата как в в параметрах функции
+// MakeDataProviderAddress
+func ParseDataProviderAddress(address uint32) (uint32, uint32, uint32) {
+	return (address >> 16) & 0xff, (address >> 8) & 0xff, address & 0xff
+}
+
 func MakeStr(countParams uint8, data []interface{}, useSplit32 bool) string {
 	var formatStr string
 
