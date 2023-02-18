@@ -48,6 +48,11 @@ func (ls *LogStack) SetId(name string) {
 	ls.Block.SetName(name)
 }
 
+func (ls *LogStack) AddLogRecordAsIs(lr LogRecord) {
+	ls.stack.PushFront(lr)
+	ls.manageStack()
+}
+
 func (ls *LogStack) AddInfoLogRecord(message string) {
 	ls.addLogRecord(message, LogRecTypeInfo)
 }
@@ -125,9 +130,4 @@ func (ls *LogStack) manageStack() {
 		el := ls.stack.Back()
 		ls.stack.Remove(el)
 	}
-}
-
-func (ls *LogStack) AddLogRecordAsIs(lr LogRecord) {
-	ls.stack.PushFront(lr)
-	ls.manageStack()
 }
