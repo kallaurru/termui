@@ -127,8 +127,7 @@ func (ls *LogStack) manageStack() {
 	}
 }
 
-func (ls *LogStack) addLogRecordAsIs(lr *LogRecord) {
-	newLR := lr.Copy()
-	ls.stack.PushFront(&newLR)
+func (ls *LogStack) AddLogRecordAsIs(lr LogRecord) {
+	ls.stack.PushFront(lr)
 	ls.manageStack()
 }
