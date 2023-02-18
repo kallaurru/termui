@@ -15,6 +15,20 @@ type CellDetail struct {
 	data interface{}  // или Drawable или *GridSchema
 }
 
+func MakeCellDetailWithWidget(row, col uint8, w AdaptiveSize, widget interface{}) *CellDetail {
+	cd := NewCellDetail(row, col, w)
+	cd.SetWidget(widget)
+
+	return cd
+}
+
+func MakeCellDetailWithSchema(row, col uint8, w AdaptiveSize, schema *GridSchema) *CellDetail {
+	cd := NewCellDetail(row, col, w)
+	cd.SetSchema(schema)
+
+	return cd
+}
+
 func NewCellDetail(row, col uint8, size AdaptiveSize) *CellDetail {
 	cd := &CellDetail{
 		idx:  0,
