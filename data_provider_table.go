@@ -1,6 +1,9 @@
 package termui
 
-import "sync"
+import (
+	"fmt"
+	"sync"
+)
 
 type DataProviderTable struct {
 	idx      map[uint32]string
@@ -62,6 +65,14 @@ func (dpt *DataProviderTable) GetRow(row int) []string {
 	return nil
 }
 
+// AddStyledData - если мы хотим вставить стилизованный текст как 2 параметра:
+// его нужно обернуть в спец символы
+func (dpt *DataProviderTable) AddStyledData(data string, row, col, param uint32) *DataProviderTable {
+	data = fmt.Sprintf("%s%s%s", string(TokenBeginStyledText), data, string(TokenEndStyledText))
+	return dpt.AddData(data, row, col, param)
+}
+
+//AddData - добавить данные в провайдер
 func (dpt *DataProviderTable) AddData(data string, row, col, param uint32) *DataProviderTable {
 	var (
 		newRows = uint8(row)
