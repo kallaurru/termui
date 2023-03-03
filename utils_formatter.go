@@ -54,7 +54,6 @@ func FormatStrAsMarkers(in string, asSquared bool) string {
 }
 
 func FormatStrWithStyle(in string, style Style) string {
-
 	styleStr := StyleToString(style)
 	if len(styleStr) > 0 {
 		return fmt.Sprintf(
@@ -65,10 +64,5 @@ func FormatStrWithStyle(in string, style Style) string {
 			styleStr)
 	}
 
-	return fmt.Sprintf(
-		"%s%s%s%s",
-		string(TokenBeginStyledText),
-		in,
-		string(TokenEndStyledText),
-		styleStr)
+	return in
 }

@@ -107,7 +107,11 @@ func StyleToString(style Style) string {
 	}
 
 	if len(out) > 0 {
-		return fmt.Sprintf("(%s)", out)
+		return fmt.Sprintf(
+			"%s%s%s",
+			string(tokenBeginStyle),
+			out,
+			string(tokenEndStyle))
 	}
 
 	return out

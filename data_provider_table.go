@@ -2,6 +2,7 @@ package termui
 
 import (
 	"fmt"
+	"strings"
 	"sync"
 )
 
@@ -100,6 +101,7 @@ func (dpt *DataProviderTable) UpdateData(data string, address ...uint32) {
 	if !dpt.approveElementsAddress(r, c) {
 		return
 	}
+	// проверить если существуют данные и они подготовлены под стиль, значит добавляем токены стиля
 	dpt.mx.Lock()
 
 	defer dpt.mx.Unlock()
@@ -136,4 +138,19 @@ func (dpt *DataProviderTable) approveElementsAddress(r, c uint32) bool {
 	}
 
 	return true
+}
+
+func (dpt *DataProviderTable) isOnlyStyledText(p, r, c uint32) bool {
+	// если в переменной только стилизованный текст без строки стиля - true
+	address := MakeDataProviderAddress(p, r, c)
+	data, ok := dpt.idx[address]
+	if !ok {
+		return false
+	}
+	has := strings.HasSuffix(data, string(tokenEndStyle))
+	if has {
+		return false
+	}
+
+	return strings.HasPrefix(data, string(TokenBeginStyledText))
 }
