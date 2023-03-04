@@ -69,7 +69,7 @@ func (dpt *DataProviderTable) GetRow(row int) []string {
 // AddStyledData - если мы хотим вставить стилизованный текст как 2 параметра:
 // его нужно обернуть в спец символы
 func (dpt *DataProviderTable) AddStyledData(data string, row, col, param uint32) *DataProviderTable {
-	data = fmt.Sprintf("%s%s%s", string(TokenBeginStyledText), data, string(TokenEndStyledText))
+	data = dpt.makeStyledLine(data)
 	return dpt.AddData(data, row, col, param)
 }
 
@@ -92,6 +92,11 @@ func (dpt *DataProviderTable) AddData(data string, row, col, param uint32) *Data
 	return dpt
 }
 
+// UpdateData - обновляем данные по указанному адресу
+// @address:
+// - первым всегда идет индекс параметра. Он есть у всех видов провайдеров
+// - вторым - индекс строки, он есть у двух из трех видов провайдеров
+// - третий - индекс колонки, он есть только у табличного провайдера
 func (dpt *DataProviderTable) UpdateData(data string, address ...uint32) {
 	var iParam int
 
@@ -102,6 +107,9 @@ func (dpt *DataProviderTable) UpdateData(data string, address ...uint32) {
 		return
 	}
 	// проверить если существуют данные и они подготовлены под стиль, значит добавляем токены стиля
+	if dpt.isOnlyStyledText(p, r, c) {
+		data = dpt.makeStyledLine(data)
+	}
 	dpt.mx.Lock()
 
 	defer dpt.mx.Unlock()
@@ -153,4 +161,12 @@ func (dpt *DataProviderTable) isOnlyStyledText(p, r, c uint32) bool {
 	}
 
 	return strings.HasPrefix(data, string(TokenBeginStyledText))
+}
+
+func (dpt *DataProviderTable) makeStyledLine(line string) string {
+	return fmt.Sprintf(
+		"%s%s%s",
+		string(TokenBeginStyledText),
+		line,
+		string(TokenEndStyledText))
 }
