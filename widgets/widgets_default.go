@@ -45,7 +45,6 @@ func MakeDefaultATable(cw []int, align []Alignment, wts ...*WidgetTheme) *ATable
 
 	at.WidgetTheme = wt
 	at.Block.SetEmptyHeader()
-	at.PaddingTop = 1
 	at.Border = true
 	at.RowSeparator = false
 	at.ColSeparator = false
