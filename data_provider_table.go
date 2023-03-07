@@ -129,6 +129,27 @@ func (dpt *DataProviderTable) UpdateData(data string, address ...uint32) {
 	dpt.insertInCache(r, c, colStr)
 }
 
+/*
+Предназначены для быстрого вкл/откл значков на дашборде.
+Желательно заносить их одним параметром, потому что стилизация текста будет убираться
+*/
+
+func (dpt *DataProviderTable) On(r, c uint32) {
+	var p uint32 = 0
+
+	addr := MakeDataProviderAddress(p, r, c)
+	val, ok := dpt.idx[addr]
+	if !ok {
+		return
+	}
+	dpt.UpdateData(val, p, r, c)
+}
+
+func (dpt *DataProviderTable) Off(r, c uint32) {
+	data := string(EMPTY)
+	dpt.UpdateData(data, 0, r, c)
+}
+
 func (dpt *DataProviderTable) insertInCache(row, col uint32, data string) {
 	if len(dpt.cache) <= int(row) {
 		return
