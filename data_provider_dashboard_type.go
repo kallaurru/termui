@@ -15,21 +15,15 @@ func NewDataProviderDashboard(lib *DashboardLib) *DataProviderDashboard {
 		cache: make([][]string, 0, lib.Rows()),
 	}
 	// сразу создаем кэш для отображения всех значков панели
-	var r, c int
 	rows, cols := lib.Rows(), lib.Cols()
 	idx := lib.Idx()
-
-	for r = 0; r < rows; r++ {
-		cacheRow := make([]string, 0, 2)
-		for c = 0; c < cols; c++ {
-			addr := MakeDataProviderAddress(0, uint32(r), uint32(c))
-			val, ok := idx[addr]
-			if !ok {
-				break
-			}
-			cacheRow = append(cacheRow, val.String())
-		}
-		dash.cache = append(dash.cache, cacheRow)
+	// проставляем размеры кэша
+	for r := 0; r < rows; r++ {
+		dash.cache[r] = make([]string, cols)
+	}
+	// заполняем данные
+	for _, item := range idx {
+		dash.cache[item.R][item.C] = item.String()
 	}
 
 	return dash
