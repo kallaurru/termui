@@ -56,6 +56,11 @@ func (dl *DashboardLib) GetItem(name string) (*DashboardLibItem, bool) {
 	return val, ok
 }
 
+func (dl *DashboardLib) AddString(r, c uint32, name, data string, styles ...Style) *DashboardLib {
+	dl.addItem(r, c, data, name, styles...)
+	return dl
+}
+
 func (dl *DashboardLib) AddCircleLineItem(r, c uint32, name, line string, styles ...Style) *DashboardLib {
 	circled := ConvertSymToMarkers(line)
 	dl.addItem(r, c, circled, name, styles...)
