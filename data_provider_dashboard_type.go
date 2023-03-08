@@ -12,7 +12,7 @@ func NewDataProviderDashboard(lib *DashboardLib) *DataProviderDashboard {
 	dash := &DataProviderDashboard{
 		lib:   lib,
 		mx:    sync.RWMutex{},
-		cache: make([][]string, 0, lib.Rows()),
+		cache: make([][]string, lib.Rows()),
 	}
 	// сразу создаем кэш для отображения всех значков панели
 	rows, cols := lib.Rows(), lib.Cols()
