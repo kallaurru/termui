@@ -1,6 +1,9 @@
 package termui
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 type DashboardLib struct {
 	lib map[string]*DashboardLibItem
@@ -53,58 +56,62 @@ func (dl *DashboardLib) GetItem(name string) (*DashboardLibItem, bool) {
 	return val, ok
 }
 
-func (dl *DashboardLib) AddCircleLineItem(r, c, p uint32, name, line string, styles ...Style) *DashboardLib {
+func (dl *DashboardLib) AddCircleLineItem(r, c uint32, name, line string, styles ...Style) *DashboardLib {
 	circled := ConvertSymToMarkers(line)
-	dl.addItem(r, c, p, circled, name, styles...)
+	dl.addItem(r, c, circled, name, styles...)
 
 	return dl
 }
 
-func (dl *DashboardLib) AddSquaredLineItem(r, c, p uint32, name, line string, styles ...Style) *DashboardLib {
+func (dl *DashboardLib) AddSquaredLineItem(r, c uint32, name, line string, styles ...Style) *DashboardLib {
 	var squared string
 
 	line = strings.ToUpper(line)
 	squared = ConvertSymToSquaredMarker(line)
-	dl.addItem(r, c, p, squared, name, styles...)
+	dl.addItem(r, c, squared, name, styles...)
 
 	return dl
 }
 
-func (dl *DashboardLib) AddIconFree(r, c, p uint32, icon int32, name string) *DashboardLib {
-	dl.addItem(r, c, p, string(icon), name)
+func (dl *DashboardLib) AddIconFree(r, c uint32, icon int32, name string) *DashboardLib {
+	dl.addItem(r, c, string(icon), name)
 
 	return dl
 }
 
-func (dl *DashboardLib) AddBoldNumber(r, c, p uint32, numb int32, name string, styles ...Style) *DashboardLib {
-	dl.addItem(r, c, p, ConvertToBoldNumbers(numb), name, styles...)
+func (dl *DashboardLib) AddBoldNumber(r, c uint32, numb int32, name string, styles ...Style) *DashboardLib {
+	dl.addItem(r, c, ConvertToBoldNumbers(numb), name, styles...)
 
 	return dl
 }
 
-func (dl *DashboardLib) AddRomeNumber(r, c, p uint32, numb int32, name string, styles ...Style) *DashboardLib {
-	dl.addItem(r, c, p, ConvertToRomeNumbers(numb), name, styles...)
+func (dl *DashboardLib) AddRomeNumber(r, c uint32, numb int32, name string, styles ...Style) *DashboardLib {
+	dl.addItem(r, c, ConvertToRomeNumbers(numb), name, styles...)
 
 	return dl
 }
 
-func (dl *DashboardLib) AddMonoNumber(r, c, p uint32, numb int32, name string, styles ...Style) *DashboardLib {
-	dl.addItem(r, c, p, ConvertToMonoNumbers(numb), name, styles...)
+func (dl *DashboardLib) AddMonoNumber(r, c uint32, numb int32, name string, styles ...Style) *DashboardLib {
+	dl.addItem(r, c, ConvertToMonoNumbers(numb), name, styles...)
 
 	return dl
 }
 
-func (dl *DashboardLib) AddFullNumber(r, c, p uint32, numb int32, name string, styles ...Style) *DashboardLib {
-	dl.addItem(r, c, p, ConvertToFullNumbers(numb), name, styles...)
+func (dl *DashboardLib) AddFullNumber(r, c uint32, numb int32, name string, styles ...Style) *DashboardLib {
+	dl.addItem(r, c, ConvertToFullNumbers(numb), name, styles...)
 
 	return dl
 }
 
-func (dl *DashboardLib) addItem(r, c, p uint32, data, name string, styles ...Style) {
+func (dl *DashboardLib) addItem(r, c uint32, data, name string, styles ...Style) {
 	var (
-		newRow = uint8(r)
-		newCol = uint8(c)
+		newRow        = uint8(r)
+		newCol        = uint8(c)
+		p      uint32 = 0
 	)
+	if name == "" {
+		name = fmt.Sprintf("%d", MakeDataProviderAddress(p, r, c))
+	}
 
 	item := NewDashboardLibsItem(data, r, c, p, styles...)
 	dl.lib[name] = item
