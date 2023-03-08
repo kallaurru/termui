@@ -11,7 +11,7 @@ func NewDashboardLibsItem(iconView string, r, c, p uint32, styles ...Style) *Das
 	if len(styles) == 0 {
 		str = iconView
 	} else {
-		FormatStrWithStyle(iconView, styles[0])
+		str = FormatStrWithStyle(iconView, styles[0])
 	}
 
 	return &DashboardLibItem{
