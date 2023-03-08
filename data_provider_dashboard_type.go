@@ -1,6 +1,9 @@
 package termui
 
-import "sync"
+import (
+	"fmt"
+	"sync"
+)
 
 type DataProviderDashboard struct {
 	lib   *DashboardLib
@@ -41,12 +44,22 @@ func (dpd *DataProviderDashboard) On(name string) {
 	dpd.insertInCache(val.R, val.C, val.String())
 }
 
+func (dpd *DataProviderDashboard) ON(r, c uint32) {
+	name := fmt.Sprintf("%d", MakeDataProviderAddress(0, r, c))
+	dpd.On(name)
+}
+
 func (dpd *DataProviderDashboard) Off(name string) {
 	val, ok := dpd.lib.GetItem(name)
 	if !ok {
 		return
 	}
 	dpd.insertInCache(val.R, val.C, string(EMPTY))
+}
+
+func (dpd *DataProviderDashboard) OFF(r, c uint32) {
+	name := fmt.Sprintf("%d", MakeDataProviderAddress(0, r, c))
+	dpd.Off(name)
 }
 
 func (dpd *DataProviderDashboard) insertInCache(r, c uint32, data string) {
