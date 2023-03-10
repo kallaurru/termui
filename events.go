@@ -42,14 +42,6 @@ List of events:
 type EventType uint
 
 const (
-	TickerActionCreate uint8 = 0x00 // создать
-	TickerActionUpdate uint8 = 0x01 // обновить
-	TickerActionDelete uint8 = 0x02 // удалить
-
-	EventTypeDataString    uint8 = 0x01 // строка
-	EventTypeDataArrString uint8 = 0x02 // массив строк
-	EventTypeDataMapString uint8 = 0x04 // карта строка -> строка
-
 	KeyboardEvent EventType = iota
 	MouseEvent
 	ResizeEvent
