@@ -68,8 +68,8 @@ func MakeDefaultATable(cw []int, align []Alignment, wts ...*WidgetTheme) *ATable
 // @w, @h - размеры в которые должно вписываться это всплывающее окно
 // @rows - содержимое
 func MakeDefaultHotkeyWindow(parent image.Rectangle, w, h int, cw []int, rows [][]string) *ATable {
-	realColWidth := ConvWidthRelativeToAbs(parent.Min.X, parent.Max.X, cw, []string{""})
 	positionWidget := MakeCenterPositionWidget(parent, w, h)
+	realColWidth := ConvWidthRelativeToAbs(positionWidget.Min.X, positionWidget.Max.X, cw, []string{""})
 
 	at := MakeDefaultATable(realColWidth, []Alignment{AlignLeft, AlignRight})
 	at.MakeGlamourTitle("Application hotkeys")
