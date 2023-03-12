@@ -2,6 +2,7 @@ package widgets
 
 import (
 	. "github.com/kallaurru/termui/v3"
+	"image"
 )
 
 func MakeDefaultGauge(gts ...GaugeTheme) *Gauge {
@@ -58,6 +59,23 @@ func MakeDefaultATable(cw []int, align []Alignment, wts ...*WidgetTheme) *ATable
 			at.AddColAlignment(i, align[i])
 		}
 	}
+
+	return at
+}
+
+// MakeDefaultHotkeyWindow - всплывающее окно со справочной информацией
+// @parent - размер приложения на экране
+// @w, @h - размеры в которые должно вписываться это всплывающее окно
+// @rows - содержимое
+func MakeDefaultHotkeyWindow(parent image.Rectangle, w, h int, cw []int, rows [][]string) *ATable {
+	realColWidth := ConvWidthRelativeToAbs(parent.Min.X, parent.Max.X, cw, []string{""})
+	positionWidget := MakeCenterPositionWidget(parent, w, h)
+
+	at := MakeDefaultATable(realColWidth, []Alignment{AlignLeft, AlignRight})
+	at.MakeGlamourTitle("Application hotkeys")
+	at.Rows = rows
+	at.Block.Min = positionWidget.Min
+	at.Block.Max = positionWidget.Max
 
 	return at
 }
