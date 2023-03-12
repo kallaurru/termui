@@ -74,8 +74,7 @@ func MakeDefaultHotkeyWindow(parent image.Rectangle, w, h int, cw []int, rows []
 	at := MakeDefaultATable(realColWidth, []Alignment{AlignLeft, AlignRight})
 	at.MakeGlamourTitle("Application hotkeys")
 	at.Rows = rows
-	at.Block.Min = positionWidget.Min
-	at.Block.Max = positionWidget.Max
+	at.Block.Rectangle = positionWidget
 
 	return at
 }
