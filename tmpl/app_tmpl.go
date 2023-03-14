@@ -41,3 +41,6 @@ func (app *AppTmpl) ClearFocus() {
 func (app *AppTmpl) SetFocus(id string) {
 	app.focus = id
 }
+func (app *AppTmpl) Focus() string {
+	return app.focus
+}
