@@ -76,8 +76,8 @@ type TickerPld struct {
 
 // ServicePld payload
 type ServicePld struct {
-	TypeID uint8
-	Data   interface{}
+	Route string
+	Data  []interface{}
 }
 
 type InputPld struct {
