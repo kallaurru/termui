@@ -57,3 +57,15 @@ func (app *AppTmpl) Close() {
 	close(app.ChanLog)
 	close(app.ChanDraw)
 }
+
+func (app *AppTmpl) Info(msg string) {
+	app.ChanLog <- w.NewLogRecordPtr(msg, w.LogRecTypeInfo)
+}
+
+func (app *AppTmpl) Warn(msg string) {
+	app.ChanLog <- w.NewLogRecordPtr(msg, w.LogRecTypeWarn)
+}
+
+func (app *AppTmpl) Err(msg string) {
+	app.ChanLog <- w.NewLogRecordPtr(msg, w.LogRecTypeErr)
+}
