@@ -48,10 +48,16 @@ func (app *AppTmpl) ClearFocus() {
 }
 
 func (app *AppTmpl) SetFocus(id string) {
+	app.Mx.Lock()
+	defer app.Mx.Unlock()
+
 	app.focus = id
 }
 
 func (app *AppTmpl) Focus() string {
+	app.Mx.RLock()
+	defer app.Mx.RUnlock()
+
 	return app.focus
 }
 
