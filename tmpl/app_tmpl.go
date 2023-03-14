@@ -76,11 +76,16 @@ func (app *AppTmpl) AddToStorage(id string, param interface{}) {
 	if app.storage == nil {
 		app.storage = make(map[string]interface{})
 	}
+	app.Mx.Lock()
+	defer app.Mx.Unlock()
 
 	app.storage[id] = param
 }
 
 func (app *AppTmpl) GetParam(id string) interface{} {
+	app.Mx.RLock()
+	defer app.Mx.RUnlock()
+
 	val, ok := app.storage[id]
 	if !ok {
 		return nil
