@@ -15,7 +15,7 @@ type AppTmpl struct {
 	Grid      *Grid
 	ChanLog   chan *w.LogRecord
 	ChanDraw  chan Drawable
-	ChanEvent chan Event
+	ChanEvent chan *Event
 	focus     string
 	storage   map[string]interface{}
 }
@@ -36,7 +36,7 @@ func NewAppTmpl(isRealBuf bool) *AppTmpl {
 		Size:      size,
 		ChanLog:   make(chan *w.LogRecord, 8),
 		ChanDraw:  make(chan Drawable),
-		ChanEvent: make(chan Event),
+		ChanEvent: make(chan *Event),
 
 		focus:   "",
 		storage: nil,
