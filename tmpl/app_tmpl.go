@@ -2,21 +2,24 @@ package tmpl
 
 import (
 	. "github.com/kallaurru/termui/v3"
+	w "github.com/kallaurru/termui/v3/widgets"
 	"image"
 	"sync"
 )
 
 type AppTmpl struct {
-	Mx    sync.RWMutex
-	Mode  bool // true is edit, false read
-	Size  image.Rectangle
-	Theme *WidgetTheme
-	Grid  *Grid
-
-	focus string
+	Mx        sync.RWMutex
+	Mode      bool // true is edit, false read
+	Size      image.Rectangle
+	Theme     *WidgetTheme
+	Grid      *Grid
+	ChanLog   chan *w.LogRecord
+	ChanDraw  chan Drawable
+	ChanEvent chan Event
+	focus     string
 }
 
-func NewAppTmpl(isRealBuf bool) AppTmpl {
+func NewAppTmpl(isRealBuf bool) *AppTmpl {
 	var size image.Rectangle
 	if isRealBuf {
 		// будет работать только после Init()
@@ -26,11 +29,15 @@ func NewAppTmpl(isRealBuf bool) AppTmpl {
 		size = image.Rect(0, 0, 120, 80)
 	}
 
-	return AppTmpl{
-		Theme: NewMyDefaultWidgetTheme(),
+	return &AppTmpl{
+		Theme:     NewMyDefaultWidgetTheme(),
+		Mode:      false,
+		Size:      size,
+		ChanLog:   make(chan *w.LogRecord, 8),
+		ChanDraw:  make(chan Drawable),
+		ChanEvent: make(chan Event),
+
 		focus: "",
-		Mode:  false,
-		Size:  size,
 	}
 }
 
