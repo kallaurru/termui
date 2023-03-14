@@ -8,11 +8,12 @@ import (
 
 type AppTmpl struct {
 	Mx    sync.RWMutex
-	Focus string
 	Mode  bool // true is edit, false read
 	Size  image.Rectangle
 	Theme *WidgetTheme
 	Grid  *Grid
+
+	focus string
 }
 
 func NewAppTmpl(isRealBuf bool) AppTmpl {
@@ -27,8 +28,16 @@ func NewAppTmpl(isRealBuf bool) AppTmpl {
 
 	return AppTmpl{
 		Theme: NewMyDefaultWidgetTheme(),
-		Focus: "",
+		focus: "",
 		Mode:  false,
 		Size:  size,
 	}
+}
+
+func (app *AppTmpl) ClearFocus() {
+	app.focus = ""
+}
+
+func (app *AppTmpl) SetFocus(id string) {
+	app.focus = id
 }
