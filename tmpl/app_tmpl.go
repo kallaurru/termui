@@ -17,6 +17,7 @@ type AppTmpl struct {
 	ChanDraw  chan Drawable
 	ChanEvent chan Event
 	focus     string
+	storage   map[string]interface{}
 }
 
 func NewAppTmpl(isRealBuf bool) *AppTmpl {
@@ -37,7 +38,8 @@ func NewAppTmpl(isRealBuf bool) *AppTmpl {
 		ChanDraw:  make(chan Drawable),
 		ChanEvent: make(chan Event),
 
-		focus: "",
+		focus:   "",
+		storage: nil,
 	}
 }
 
@@ -68,4 +70,21 @@ func (app *AppTmpl) Warn(msg string) {
 
 func (app *AppTmpl) Err(msg string) {
 	app.ChanLog <- w.NewLogRecordPtr(msg, w.LogRecTypeErr)
+}
+
+func (app *AppTmpl) AddToStorage(id string, param interface{}) {
+	if app.storage == nil {
+		app.storage = make(map[string]interface{})
+	}
+
+	app.storage[id] = param
+}
+
+func (app *AppTmpl) GetParam(id string) interface{} {
+	val, ok := app.storage[id]
+	if !ok {
+		return nil
+	}
+
+	return val
 }
