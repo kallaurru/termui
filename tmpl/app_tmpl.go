@@ -9,7 +9,7 @@ import (
 
 type AppTmpl struct {
 	Mx        sync.RWMutex
-	Mode      bool // true is edit, false read
+	ModeEdit  bool // true is edit, false read
 	Size      image.Rectangle
 	Theme     *WidgetTheme
 	Grid      *Grid
@@ -32,7 +32,7 @@ func NewAppTmpl(isRealBuf bool) *AppTmpl {
 
 	return &AppTmpl{
 		Theme:     NewMyDefaultWidgetTheme(),
-		Mode:      false,
+		ModeEdit:  false,
 		Size:      size,
 		ChanLog:   make(chan *w.LogRecord, 8),
 		ChanDraw:  make(chan Drawable, 3),
