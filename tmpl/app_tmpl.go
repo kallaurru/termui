@@ -35,8 +35,8 @@ func NewAppTmpl(isRealBuf bool) *AppTmpl {
 		Mode:      false,
 		Size:      size,
 		ChanLog:   make(chan *w.LogRecord, 8),
-		ChanDraw:  make(chan Drawable),
-		ChanEvent: make(chan *Event),
+		ChanDraw:  make(chan Drawable, 3),
+		ChanEvent: make(chan *Event, 8),
 
 		focus:   "",
 		storage: nil,
