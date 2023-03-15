@@ -99,3 +99,7 @@ func (app *AppTmpl) GetParam(id string) interface{} {
 
 	return val
 }
+
+func (app *AppTmpl) Render() {
+	app.ChanDraw <- app.Grid
+}
