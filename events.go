@@ -47,7 +47,12 @@ const (
 	ResizeEvent
 	TickerEvent  // событие тикера должен иметь набор константных типов
 	ServiceEvent // событие от внеш сервиса id сервиса
+	SystemEvent  //  события внутри приложения
 	InputEvent   // события полей редактирования
+
+	SystemEventActionWidgetSomeOp   = 0x00 // передаем параметром id виджета
+	SystemEventActionWidgetUpdateOp = 0x01 // передаем id виджета и данные если нужно
+	SystemEventActionDPUpdateOp     = 0x02 // передаем id провайдера данных, id виджета если не совпадают
 )
 
 type Event struct {
@@ -74,10 +79,20 @@ type TickerPld struct {
 	Action uint8
 }
 
+// fixme подредактировать когда будешь писать mm app
+
 // ServicePld payload
 type ServicePld struct {
-	Route string
-	Data  []interface{}
+	Op   int
+	Id   string // id widget or id dp. id widget = id dp
+	Data []interface{}
+}
+
+// SystemPld payload
+type SystemPld struct {
+	Op   int
+	Id   string // id widget or id dp. id widget = id dp
+	Data []interface{}
 }
 
 type InputPld struct {
