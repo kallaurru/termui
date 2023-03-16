@@ -50,9 +50,8 @@ const (
 	SystemEvent  //  события внутри приложения
 	InputEvent   // события полей редактирования
 
-	SystemEventActionWidgetSomeOp   = 0x00 // передаем id виджета
-	SystemEventActionWidgetUpdateOp = 0x01 // передаем id виджета
-	SystemEventActionDPUpdateOp     = 0x02 // передаем id провайдера данных, адрес и данные по которым нужно обновить
+	SystemEventActionWidgetSomeOp = 0x00 // передаем id виджета
+	SystemEventActionUpdateDataOp = 0x01 // передаем id виджета
 
 	serializeDelim = ":"
 )
@@ -265,14 +264,10 @@ func convertTermboxEvent(e tb.Event) Event {
 }
 
 func (e *Event) Uuid() string {
-	return fmt.Sprintf("%s%s%d", e.ID, serializeDelim, e.Type)
-}
-
-func (e *Event) GetUuidSystemEvent() string {
+	prefix := fmt.Sprintf("%s%s%d", e.ID, serializeDelim, e.Type)
 	if e.Type != SystemEvent {
-		return e.Uuid()
+		return prefix
 	}
-	prefix := e.Uuid()
 	payload := e.Payload.(SystemPld)
 
 	return fmt.Sprintf("%s%s%d", prefix, serializeDelim, payload.Op)
