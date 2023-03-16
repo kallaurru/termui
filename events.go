@@ -50,7 +50,7 @@ const (
 	SystemEvent  //  события внутри приложения
 	InputEvent   // события полей редактирования
 
-	SystemEventActionWidgetSomeOp = 0x00 // передаем id виджета
+	SystemEventActionSomeOp       = 0x00 // передаем id виджета
 	SystemEventActionUpdateDataOp = 0x01 // передаем id виджета
 
 	serializeDelim = ":"
