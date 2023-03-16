@@ -246,6 +246,16 @@ func convertTermboxEvent(e tb.Event) Event {
 	return Event{}
 }
 
-func (e Event) Uuid() string {
+func (e *Event) Uuid() string {
 	return fmt.Sprintf("%s:%d", e.ID, e.Type)
+}
+
+func (e *Event) GetUuidSystemEvent() string {
+	if e.Type != SystemEvent {
+		return e.Uuid()
+	}
+	prefix := e.Uuid()
+	payload := e.Payload.(SystemPld)
+
+	return fmt.Sprintf("%s:%d", prefix, payload.Op)
 }
