@@ -50,9 +50,9 @@ const (
 	SystemEvent  //  события внутри приложения
 	InputEvent   // события полей редактирования
 
-	SystemEventActionWidgetSomeOp   = 0x00 // передаем параметром id виджета
-	SystemEventActionWidgetUpdateOp = 0x01 // передаем id виджета и данные если нужно
-	SystemEventActionDPUpdateOp     = 0x02 // передаем id провайдера данных, id виджета если не совпадают
+	SystemEventActionWidgetSomeOp   = 0x00 // передаем id виджета
+	SystemEventActionWidgetUpdateOp = 0x01 // передаем id виджета
+	SystemEventActionDPUpdateOp     = 0x02 // передаем id провайдера данных, адрес и данные по которым нужно обновить
 )
 
 type Event struct {
