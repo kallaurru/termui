@@ -53,6 +53,8 @@ const (
 	SystemEventActionWidgetSomeOp   = 0x00 // передаем id виджета
 	SystemEventActionWidgetUpdateOp = 0x01 // передаем id виджета
 	SystemEventActionDPUpdateOp     = 0x02 // передаем id провайдера данных, адрес и данные по которым нужно обновить
+
+	serializeDelim = ":"
 )
 
 type Event struct {
@@ -173,6 +175,22 @@ var keyboardMap = map[tb.Key]string{
 	tb.KeyBackspace2: "<Backspace>", // tb.KeyCtrl8:
 }
 
+func MakeEventUuid(eventId string, t EventType, adv ...interface{}) string {
+	prefix := fmt.Sprintf("%s%s%d", eventId, serializeDelim, t)
+	if len(adv) == 0 {
+		return prefix
+	}
+	if t == SystemEvent && len(adv) > 0 {
+		val, ok := adv[0].(int)
+		if !ok {
+			return prefix
+		}
+		return fmt.Sprintf("%s%s%d", prefix, serializeDelim, val)
+	}
+
+	return prefix
+}
+
 // convertTermboxKeyboardEvent converts a termbox keyboard event to a more friendly string format.
 // Combines modifiers into the string instead of having them as additional fields in an event.
 func convertTermboxKeyboardEvent(e tb.Event) Event {
@@ -247,7 +265,7 @@ func convertTermboxEvent(e tb.Event) Event {
 }
 
 func (e *Event) Uuid() string {
-	return fmt.Sprintf("%s:%d", e.ID, e.Type)
+	return fmt.Sprintf("%s%s%d", e.ID, serializeDelim, e.Type)
 }
 
 func (e *Event) GetUuidSystemEvent() string {
@@ -257,5 +275,5 @@ func (e *Event) GetUuidSystemEvent() string {
 	prefix := e.Uuid()
 	payload := e.Payload.(SystemPld)
 
-	return fmt.Sprintf("%s:%d", prefix, payload.Op)
+	return fmt.Sprintf("%s%s%d", prefix, serializeDelim, payload.Op)
 }
