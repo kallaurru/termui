@@ -20,8 +20,10 @@ type AppTmpl struct {
 	storage   map[string]interface{}
 }
 
-func NewAppTmpl(isRealBuf bool) *AppTmpl {
+func NewAppTmpl(isRealBuf bool, chanSizes ...uint8) *AppTmpl {
 	var size image.Rectangle
+	var chLSize, chDSize, chESize = 8, 8, 8
+
 	if isRealBuf {
 		// будет работать только после Init()
 		xMax, yMax := TerminalDimensions()
@@ -29,14 +31,23 @@ func NewAppTmpl(isRealBuf bool) *AppTmpl {
 	} else {
 		size = image.Rect(0, 0, 120, 80)
 	}
-
+	if len(chanSizes) > 0 {
+		switch len(chanSizes) {
+		case 3:
+			chLSize, chDSize, chESize = int(chanSizes[0]), int(chanSizes[1]), int(chanSizes[2])
+		case 2:
+			chLSize, chDSize = int(chanSizes[0]), int(chanSizes[1])
+		case 1:
+			chLSize, chDSize, chESize = int(chanSizes[0]), int(chanSizes[0]), int(chanSizes[0])
+		}
+	}
 	return &AppTmpl{
 		Theme:     NewMyDefaultWidgetTheme(),
 		ModeEdit:  false,
 		Size:      size,
-		ChanLog:   make(chan *w.LogRecord, 8),
-		ChanDraw:  make(chan Drawable, 3),
-		ChanEvent: make(chan *Event, 8),
+		ChanLog:   make(chan *w.LogRecord, chLSize),
+		ChanDraw:  make(chan Drawable, chDSize),
+		ChanEvent: make(chan *Event, chESize),
 
 		focus:   "",
 		storage: nil,
