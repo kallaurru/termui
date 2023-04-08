@@ -20,6 +20,8 @@ type AppTmpl struct {
 	storage   map[string]interface{}
 }
 
+// NewAppTmpl - создает шаблон приложения
+// @chanSizes: 0 - log, 1 - draw, 2 - events
 func NewAppTmpl(isRealBuf bool, chanSizes ...uint8) *AppTmpl {
 	var size image.Rectangle
 	var chLSize, chDSize, chESize = 8, 8, 8
