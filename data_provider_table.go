@@ -10,6 +10,7 @@ type DataProviderTable struct {
 	idx      map[uint32]string
 	cols     uint8      // количество колонок, если есть
 	rows     uint8      // количество строк, есть всегда
+	cc       uint8      // cc - count cols, максимальное количество колонок. Для синхронизации с виджетом
 	cache    [][]string // для текста это всегда одна строка. 0 0 для текста, 0-n 0 для списка, 0-n 0-x для таблицы
 	mx       sync.RWMutex
 	useSplit bool
@@ -20,10 +21,19 @@ func NewDataProviderTable() *DataProviderTable {
 		idx:      make(map[uint32]string),
 		cols:     1,
 		rows:     1, // в любом случае 1 строка будет всегда
+		cc:       0,
 		cache:    make([][]string, 0, 2),
 		mx:       sync.RWMutex{},
 		useSplit: false,
 	}
+}
+
+func (dpt *DataProviderTable) SetMaxColsCount(count uint8) {
+	dpt.cc = count
+}
+
+func (dpt *DataProviderTable) GetMaxColsCount() uint8 {
+	return dpt.cc
 }
 
 func (dpt *DataProviderTable) UseSplit32() *DataProviderTable {
@@ -190,4 +200,12 @@ func (dpt *DataProviderTable) makeStyledLine(line string) string {
 		string(TokenBeginStyledText),
 		line,
 		string(TokenEndStyledText))
+}
+
+func (dpt *DataProviderTable) isValidColIdx(colIdx uint8) bool {
+	if dpt.cc == 0 {
+		return true
+	}
+
+	return colIdx < dpt.cc
 }
