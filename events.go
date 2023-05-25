@@ -53,6 +53,11 @@ const (
 	SystemEventActionSomeOp        = 0x00 // передаем id виджета
 	SystemEventActionUpdateDataOp  = 0x01 // передаем id виджета
 	SystemEventDashboardIconSwitch = 0x02 // передаем имя параметра дащборда если он есть
+	// SystemEventOpUpdateWidget - тип операции, который указывает, что мы меняем данные
+	// в самом виджете. Например заголовок. Требуется что бы группа виджет - провайдер данных
+	// имела один идентификатор. При данном типе операции первым значением в Payload Data идет
+	// индекс, начиная с которого идут данные для виджета.
+	SystemEventOpUpdateWidget = 0x04
 
 	serializeDelim = ":"
 )
