@@ -50,9 +50,9 @@ const (
 	SystemEvent  //  события внутри приложения
 	InputEvent   // события полей редактирования
 
-	SystemEventActionSomeOp        = 0x00 // передаем id виджета
-	SystemEventActionUpdateDataOp  = 0x01 // передаем id виджета
-	SystemEventDashboardIconSwitch = 0x02 // передаем имя параметра дащборда если он есть
+	SystemEventActionSomeOp        = 0x100 // передаем id виджета
+	SystemEventActionUpdateDataOp  = 0x101 // передаем id виджета
+	SystemEventDashboardIconSwitch = 0x102 // передаем имя параметра дащборда если он есть
 
 	/*
 		НОВЫЕ ВЕРСИИ ОПЕРАЦИЙ СИСТЕМНЫХ СОБЫТИЙ
