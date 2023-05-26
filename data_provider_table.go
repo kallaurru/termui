@@ -1,6 +1,7 @@
 package termui
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 	"sync"
@@ -85,21 +86,21 @@ func (dpt *DataProviderTable) AddStyledData(data string, row, col, param uint32)
 
 //AddData - добавить данные в провайдер
 func (dpt *DataProviderTable) AddData(data string, row, col, param uint32) *DataProviderTable {
-	var (
-		newRows = uint8(row)
-		newCols = uint8(col)
-	)
-	address := MakeDataProviderAddress(param, row, col)
-	dpt.idx[address] = data
-	if dpt.cols < newCols+1 {
-		dpt.cols = newCols + 1
-	}
-
-	if dpt.rows < newRows+1 {
-		dpt.rows = newRows + 1
-	}
-
+	dpt.addData(data, row, col, param)
 	return dpt
+}
+
+func (dpt *DataProviderTable) UpdateDataFromMap(data map[uint32]string) error {
+	for addr, line := range data {
+		if !dpt.approveAddress(addr) {
+			return errors.New("wrong address. Maybe idx col or row great than max")
+		}
+
+		p, r, c := ParseDataProviderAddress(addr)
+		dpt.updateData(line, p, r, c)
+	}
+
+	return nil
 }
 
 // UpdateData - обновляем данные по указанному адресу
@@ -108,35 +109,13 @@ func (dpt *DataProviderTable) AddData(data string, row, col, param uint32) *Data
 // - вторым - индекс строки, он есть у двух из трех видов провайдеров
 // - третий - индекс колонки, он есть только у табличного провайдера
 func (dpt *DataProviderTable) UpdateData(data string, address ...uint32) {
-	var iParam int
-
 	p, r, c := GetAddressElements(address...)
 
 	// проверка индексов строки и колонки
 	if !dpt.approveElementsAddress(r, c) {
 		return
 	}
-	// проверить если существуют данные и они подготовлены под стиль, значит добавляем токены стиля
-	if dpt.isOnlyStyledText(p, r, c) {
-		data = dpt.makeStyledLine(data)
-	}
-	dpt.mx.Lock()
-
-	defer dpt.mx.Unlock()
-
-	dpt.AddData(data, r, c, p)
-
-	cacheCol := make([]interface{}, 0, 2)
-	for iParam = 0; iParam < 0xff; iParam++ {
-		addr := MakeDataProviderAddress(uint32(iParam), r, c)
-		val, ok := dpt.idx[addr]
-		if !ok {
-			break
-		}
-		cacheCol = append(cacheCol, val)
-	}
-	colStr := MakeStr(uint8(iParam), cacheCol, dpt.useSplit)
-	dpt.insertInCache(r, c, colStr)
+	dpt.updateData(data, p, r, c)
 }
 
 /*
@@ -160,6 +139,48 @@ func (dpt *DataProviderTable) Off(r, c uint32) {
 	dpt.UpdateData(data, 0, r, c)
 }
 
+func (dpt *DataProviderTable) addData(data string, r, c, p uint32) {
+	var (
+		newRows = uint8(row)
+		newCols = uint8(col)
+	)
+	address := MakeDataProviderAddress(p, r, c)
+	dpt.idx[address] = data
+	if dpt.cols < newCols+1 {
+		dpt.cols = newCols + 1
+	}
+
+	if dpt.rows < newRows+1 {
+		dpt.rows = newRows + 1
+	}
+}
+
+func (dpt *DataProviderTable) updateData(data string, p, r, c uint32) {
+	var iParam int
+
+	// проверить если существуют данные и они подготовлены под стиль, значит добавляем токены стиля
+	if dpt.isOnlyStyledText(p, r, c) {
+		data = dpt.makeStyledLine(data)
+	}
+	dpt.mx.Lock()
+
+	defer dpt.mx.Unlock()
+
+	dpt.addData(data, r, c, p)
+
+	cacheCol := make([]interface{}, 0, 2)
+	for iParam = 0; iParam < 0xff; iParam++ {
+		addr := MakeDataProviderAddress(uint32(iParam), r, c)
+		val, ok := dpt.idx[addr]
+		if !ok {
+			break
+		}
+		cacheCol = append(cacheCol, val)
+	}
+	colStr := MakeStr(uint8(iParam), cacheCol, dpt.useSplit)
+	dpt.insertInCache(r, c, colStr)
+}
+
 func (dpt *DataProviderTable) insertInCache(row, col uint32, data string) {
 	if len(dpt.cache) <= int(row) {
 		return
@@ -177,6 +198,12 @@ func (dpt *DataProviderTable) approveElementsAddress(r, c uint32) bool {
 	}
 
 	return true
+}
+
+func (dpt *DataProviderTable) approveAddress(address uint32) bool {
+	_, r, c := ParseDataProviderAddress(address)
+
+	return dpt.approveElementsAddress(r, c)
 }
 
 func (dpt *DataProviderTable) isOnlyStyledText(p, r, c uint32) bool {

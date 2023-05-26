@@ -84,12 +84,26 @@ func (dpl *DataProviderList) AddData(data string, param uint32, row uint32) {
 	}
 }
 
+func (dpl *DataProviderList) UpdateDataFromMap(data map[uint32]string) {
+	if data == nil {
+		return
+	}
+
+	for addr, line := range data {
+		p, r, _ := ParseDataProviderAddress(addr)
+		dpl.updateData(line, p, r)
+	}
+}
+
 // UpdateData - адрес подается след образом - row, col, param
 func (dpl *DataProviderList) UpdateData(data string, address ...uint32) {
+	p, r, _ := GetAddressElements(address...)
+	dpl.updateData(data, p, r)
+}
+
+func (dpl *DataProviderList) updateData(data string, p, r uint32) {
 	var paramMax = 0xff // максимальное количество параметров
 	var pr int          // счетчик параметров при обходе
-
-	p, r, _ := GetAddressElements(address...)
 
 	if uint8(r) >= dpl.rows {
 		return
