@@ -53,11 +53,24 @@ const (
 	SystemEventActionSomeOp        = 0x00 // передаем id виджета
 	SystemEventActionUpdateDataOp  = 0x01 // передаем id виджета
 	SystemEventDashboardIconSwitch = 0x02 // передаем имя параметра дащборда если он есть
-	// SystemEventOpUpdateWidget - тип операции, который указывает, что мы меняем данные
+
+	/*
+		НОВЫЕ ВЕРСИИ ОПЕРАЦИЙ СИСТЕМНЫХ СОБЫТИЙ
+	*/
+
+	SysEventOpCustom     = 0x00 // free style
+	SysEventOpUpdateDP   = 0x01 // update data provider
+	SysEventOpUpdateData = 0x02 // update storage data
+
+	// SysEventOpModifyWidget - тип операции, который указывает, что мы меняем данные
 	// в самом виджете. Например заголовок. Требуется что бы группа виджет - провайдер данных
 	// имела один идентификатор. При данном типе операции первым значением в Payload Data идет
 	// индекс, начиная с которого идут данные для виджета.
-	SystemEventOpUpdateWidget = 0x04
+	SysEventOpModifyWidget = 0x04
+
+	SysEventOpDashIconSwitch = 0x08
+	SysEventOpUpdateGrData   = 0x10
+	SysEventOpUpdateGrDP     = 0x20
 
 	serializeDelim = ":"
 )
