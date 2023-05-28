@@ -141,8 +141,8 @@ func (dpt *DataProviderTable) Off(r, c uint32) {
 
 func (dpt *DataProviderTable) addData(data string, r, c, p uint32) {
 	var (
-		newRows = uint8(row)
-		newCols = uint8(col)
+		newRows = uint8(r)
+		newCols = uint8(c)
 	)
 	address := MakeDataProviderAddress(p, r, c)
 	dpt.idx[address] = data
