@@ -93,7 +93,8 @@ func (dpt *DataProviderTable) AddData(data string, row, col, param uint32) *Data
 func (dpt *DataProviderTable) UpdateDataFromMap(data map[uint32]string) error {
 	for addr, line := range data {
 		if !dpt.approveAddress(addr) {
-			return errors.New("wrong address. Maybe idx col or row great than max")
+			return errors.New(
+				fmt.Sprintf("wrong address. Maybe idx col or row great than max. Addr - %d. Data - %s", addr, line))
 		}
 
 		p, r, c := ParseDataProviderAddress(addr)
