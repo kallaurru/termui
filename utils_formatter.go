@@ -63,8 +63,6 @@ func FormatAmountToMonoNumbers(amount int64, decimal int32, addCurSym bool) stri
 		} else {
 			decimalStr = fmt.Sprintf("%s", ConvertToMonoNumbers(decimal))
 		}
-	} else {
-		decimalStr = ""
 	}
 
 	if isNegative {
@@ -74,7 +72,11 @@ func FormatAmountToMonoNumbers(amount int64, decimal int32, addCurSym bool) stri
 	}
 
 	if addCurSym {
-		return fmt.Sprintf("%s%s,%s", string(RUR), amountStr, decimalStr)
+		if useDecimal {
+			return fmt.Sprintf("%s%s,%s", string(RUR), amountStr, decimalStr)
+		} else {
+			return fmt.Sprintf("%s%s", string(RUR), amountStr)
+		}
 	}
 	if useDecimal {
 		return fmt.Sprintf("%s,%s", amountStr, decimalStr)
