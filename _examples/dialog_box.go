@@ -1,12 +1,10 @@
-// +build ignore
-
 package main
 
 import (
-	"image"
 	"log"
 
 	ui "github.com/kallaurru/termui/v3"
+	"github.com/kallaurru/termui/v3/widgets"
 )
 
 func main() {
@@ -15,11 +13,11 @@ func main() {
 	}
 	defer ui.Close()
 
-	c := ui.NewCanvas()
-	c.SetRect(0, 0, 50, 50)
-	c.SetLine(image.Pt(0, 0), image.Pt(10, 20), ui.ColorWhite)
+	p := widgets.NewParagraph()
+	p.Text = "Hello World!"
+	p.SetRect(0, 0, 25, 5)
 
-	ui.Render(c)
+	ui.Render(p)
 
 	for e := range ui.PollEvents() {
 		if e.Type == ui.KeyboardEvent {
