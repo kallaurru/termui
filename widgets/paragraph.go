@@ -35,12 +35,12 @@ func (self *Paragraph) Draw(buf *Buffer) {
 
 	rows := SplitCells(cells, '\n')
 
-	for y, row := range rows {
+	for y, r := range rows {
 		if y+self.Inner.Min.Y >= self.Inner.Max.Y {
 			break
 		}
-		row = TrimCells(row, self.Inner.Dx())
-		for _, cx := range BuildCellWithXArray(row) {
+		r = TrimCells(r, self.Inner.Dx())
+		for _, cx := range BuildCellWithXArray(r) {
 			x, cell := cx.X, cx.Cell
 			buf.SetCell(cell, image.Pt(x, y).Add(self.Inner.Min))
 		}

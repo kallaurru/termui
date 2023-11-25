@@ -173,7 +173,7 @@ var Theme = RootTheme{
 	},
 }
 
-//GetTitleStyle - получить стиль заголовка
+// GetTitleStyle - получить стиль заголовка
 func (wt *WidgetTheme) GetTitleStyle(isActive bool) Style {
 	if isActive {
 		return wt.activeTitleStyle
@@ -182,7 +182,7 @@ func (wt *WidgetTheme) GetTitleStyle(isActive bool) Style {
 	return wt.titleStyle
 }
 
-//GetBorderStyle - получить стиль линии обводки
+// GetBorderStyle - получить стиль линии обводки
 func (wt *WidgetTheme) GetBorderStyle(isActive bool) Style {
 	if isActive {
 		return wt.activeBorderStyle
@@ -205,6 +205,15 @@ func NewMyDefaultWidgetTheme() *WidgetTheme {
 		titleStyle:        NewStyle(ColorWhite),
 		borderStyle:       NewStyle(ColorWhite),
 		activeTitleStyle:  NewStyle(ColorGreenBlue, ColorClear, ModifierBold),
+		activeBorderStyle: NewStyle(ColorGreenBlue),
+	}
+}
+
+func NewButtonDefaultTheme() *WidgetTheme {
+	return &WidgetTheme{
+		titleStyle:        NewStyle(ColorWhite),
+		borderStyle:       NewStyle(ColorWhite),
+		activeTitleStyle:  NewStyleBgFree(ColorGreenBlue, ModifierBold),
 		activeBorderStyle: NewStyle(ColorGreenBlue),
 	}
 }

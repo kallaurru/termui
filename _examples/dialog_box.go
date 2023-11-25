@@ -1,27 +1,42 @@
 package main
 
 import (
+	"image"
 	"log"
 
-	ui "github.com/kallaurru/termui/v3"
+	. "github.com/kallaurru/termui/v3"
 	"github.com/kallaurru/termui/v3/widgets"
 )
 
 func main() {
-	if err := ui.Init(); err != nil {
+	if err := Init(); err != nil {
 		log.Fatalf("failed to initialize termui: %v", err)
 	}
-	defer ui.Close()
+	defer Close()
 
-	p := widgets.NewParagraph()
-	p.Text = "Hello World!"
-	p.SetRect(0, 0, 25, 5)
+	w, h := TerminalDimensions()
+	log.Println("width - ", w, "height - ", h)
 
-	ui.Render(p)
+	parent := image.Rect(0, 0, w, h)
+	title := "Information Box"
+	center := image.Pt(parent.Dx()/2, parent.Dy()/2)
+	db := widgets.NewDialogBox(center, title, "Test information message. Period is correct")
 
-	for e := range ui.PollEvents() {
-		if e.Type == ui.KeyboardEvent {
-			break
+	Render(db)
+	uiEvents := PollEvents()
+
+	for {
+		select {
+		case e := <-uiEvents:
+			switch e.ID {
+			case "q", "<C-c>":
+				return
+			case "<Enter>":
+				lab := "Taked"
+				db.SetButtonLabel(lab)
+				Render(db)
+
+			}
 		}
 	}
 }
