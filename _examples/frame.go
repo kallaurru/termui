@@ -40,7 +40,7 @@ loop:
 				Render(fr)
 				goto loop
 			default:
-				fr.AddSymbol(e.ID)
+				fr.AddSymbol(e.ID, e.Ch)
 				Render(fr)
 			}
 		}

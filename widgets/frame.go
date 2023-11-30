@@ -6,7 +6,7 @@ import (
 	"image"
 )
 
-var availableMap = map[string][]rune{
+var availableHexKeyMap = map[string][]rune{
 	"0": []rune("0"),
 	"1": []rune("1"),
 	"2": []rune("2"),
@@ -39,6 +39,7 @@ type Frame struct {
 	input     []rune
 	maxLength int
 	isEdit    bool
+	title     string
 }
 
 func NewFrame(center image.Point, title string) *Frame {
@@ -46,10 +47,13 @@ func NewFrame(center image.Point, title string) *Frame {
 		Block:     *NewBlock(),
 		isEdit:    false,
 		maxLength: 32,
+		title:     title,
 	}
 
-	f.setBlockRect(center, f.maxLength)
 	f.Block.Border = true
+	f.Block.PaddingTop = 1
+	f.Block.PaddingLeft = 1
+	f.setBlockRect(center, f.maxLength)
 	f.Block.MakeGlamourTitle(title)
 	f.clearBuffer()
 
@@ -62,13 +66,15 @@ func (f *Frame) Input() string {
 
 func (f *Frame) CaptureModeOn() {
 	f.isEdit = true
+	f.Block.MakeGlamourTitle(fmt.Sprintf("%s *", f.title))
 }
 
 func (f *Frame) CaptureModeOff() {
 	f.isEdit = false
+	f.Block.MakeGlamourTitle(f.title)
 }
 
-func (f *Frame) AddSymbol(code string) {
+func (f *Frame) AddSymbol(code string, ch rune) {
 	if !f.isEdit {
 		return
 	}
@@ -82,21 +88,28 @@ func (f *Frame) AddSymbol(code string) {
 		f.Block.MakeGlamourTitle("Backspace press")
 		return
 	}
-	if len(f.input) >= f.maxLength {
-		f.isEdit = false
+	// проверка наличия свободного места
+	if len(f.input) >= f.maxLength-1 {
+		f.CaptureModeOff()
 		return
 	}
 
-	symb, ok := availableMap[code]
-	if !ok {
+	// пробел
+	if code == "<Space>" {
+		f.input = append(f.input, 32)
 		return
 	}
-	f.input = append(f.input, symb[0])
+
+	if ch == 0 {
+		return
+	}
+
+	f.input = append(f.input, ch)
 }
 
 func (f *Frame) Draw(buf *Buffer) {
 	var str string
-	if len(f.input) < f.maxLength && f.isEdit {
+	if len(f.input) < f.maxLength-1 && f.isEdit {
 		str = fmt.Sprintf("%s%s", string(f.input), string(BARS[1]))
 	} else {
 		str = string(f.input)
@@ -124,8 +137,8 @@ func (f *Frame) setBlockRect(center image.Point, limitX int) {
 
 	yMin := center.Y - 2
 	yMax := center.Y + 2
-	xMin := center.X - half - 1
-	xMax := center.X + half + 1
+	xMin := center.X - half - 3
+	xMax := center.X + half + 3
 
 	f.Block.SetRect(xMin, yMin, xMax, yMax)
 }

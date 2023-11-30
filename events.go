@@ -78,6 +78,7 @@ const (
 type Event struct {
 	Type    EventType
 	ID      string
+	Ch      rune
 	Payload interface{}
 }
 
@@ -216,21 +217,23 @@ func convertTermboxKeyboardEvent(e tb.Event) Event {
 	if e.Mod == tb.ModAlt {
 		ID = "<M-%s>"
 	}
-
+	ek := Event{
+		Type: KeyboardEvent,
+		Ch:   0,
+		ID:   "",
+	}
 	if e.Ch != 0 {
-		ID = fmt.Sprintf(ID, string(e.Ch))
+		ek.ID = fmt.Sprintf(ID, string(e.Ch))
+		ek.Ch = e.Ch
 	} else {
 		converted, ok := keyboardMap[e.Key]
 		if !ok {
 			converted = ""
 		}
-		ID = fmt.Sprintf(ID, converted)
+		ek.ID = fmt.Sprintf(ID, converted)
 	}
 
-	return Event{
-		Type: KeyboardEvent,
-		ID:   ID,
-	}
+	return ek
 }
 
 var mouseButtonMap = map[tb.Key]string{
