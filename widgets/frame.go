@@ -6,6 +6,7 @@ import (
 	"image"
 )
 
+// можно расширить для возможности набора полноценных строк
 var availableHexKeyMap = map[string][]rune{
 	"0": []rune("0"),
 	"1": []rune("1"),
@@ -36,18 +37,20 @@ var availableHexKeyMap = map[string][]rune{
 // Frame Окно с возможностью редактирования текста
 type Frame struct {
 	Block
-	input     []rune
-	maxLength int
-	isEdit    bool
-	title     string
+	input       []rune
+	maxLength   int
+	isEdit      bool
+	onlyNumbers uint8
+	title       string
 }
 
 func NewFrame(center image.Point, title string) *Frame {
 	f := &Frame{
-		Block:     *NewBlock(),
-		isEdit:    false,
-		maxLength: 32,
-		title:     title,
+		Block:       *NewBlock(),
+		isEdit:      false,
+		onlyNumbers: 0,
+		maxLength:   32,
+		title:       title,
 	}
 
 	f.Block.Border = true
@@ -103,7 +106,15 @@ func (f *Frame) AddSymbol(code string, ch rune) {
 	if ch == 0 {
 		return
 	}
-
+	// todo добавить возможность добавлять только числовые варианты
+	if f.onlyNumbers > 0 {
+		strCh := string(ch)
+		_, ok := availableHexKeyMap[strCh]
+		if ok {
+			f.input = append(f.input, ch)
+		}
+		return
+	}
 	f.input = append(f.input, ch)
 }
 
@@ -141,6 +152,12 @@ func (f *Frame) setBlockRect(center image.Point, limitX int) {
 	xMax := center.X + half + 3
 
 	f.Block.SetRect(xMin, yMin, xMax, yMax)
+}
+
+func (f *Frame) OnlyNumbers() {
+	var onlyNumbersMask uint8 = 0x01
+
+	f.onlyNumbers &^= onlyNumbersMask
 }
 
 func (f *Frame) clearBuffer() {

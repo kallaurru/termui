@@ -27,7 +27,7 @@ func NewAppTmpl(isRealBuf bool, chanSizes ...uint8) *AppTmpl {
 	var chLSize, chDSize, chESize = 8, 8, 8
 
 	if isRealBuf {
-		// будет работать только после Init()
+		// будет работать только после Init() из пакера termui
 		xMax, yMax := TerminalDimensions()
 		size = image.Rect(0, 0, xMax, yMax)
 	} else {
