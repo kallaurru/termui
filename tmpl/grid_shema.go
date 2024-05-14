@@ -10,14 +10,18 @@ const (
 	HelperId = "helper:id"
 )
 
-/** Весь макет делим на строки, далее в ячейках могут быть вложенные схемы */
+/**
+Весь макет делим на строки, далее в ячейках могут быть вложенные схемы
+*/
 
+// GridSchema - схема для создания для адаптивной сетки
 type GridSchema struct {
 	rowsSizes map[uint8]AdaptiveSize
 	cells     map[uint8]*list.List // в списке или схема или детали (GridSchema, CellDetail)
 	idx       map[string]Drawable
 }
 
+// NewGridSchema - указываем ширину строк. В сумме должно быть не больше 100%
 func NewGridSchema(sizes ...AdaptiveSize) *GridSchema {
 	gs := &GridSchema{
 		rowsSizes: make(map[uint8]AdaptiveSize),

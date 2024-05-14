@@ -1,7 +1,7 @@
 package termui
 
 type DashboardLibItem struct {
-	P, R, C  uint32
+	P, R, C  uint32 // номер параметра, строки, колонки
 	iconView string
 }
 
