@@ -15,6 +15,7 @@ const (
 */
 
 // GridSchema - схема для создания для адаптивной сетки
+// Deprecated: нужно использовать AppGridSchema
 type GridSchema struct {
 	rowsSizes map[uint8]AdaptiveSize
 	cells     map[uint8]*list.List // в списке или схема или детали (GridSchema, CellDetail)

@@ -1,6 +1,8 @@
 package termui
 
 const (
+	AdaptiveSizeMaxInt int = 100
+
 	adaptiveSizeZero int = 0
 	adaptiveSizeMin  int = 10
 	adaptiveSizeMax  int = 100
