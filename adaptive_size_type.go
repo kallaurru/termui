@@ -40,6 +40,10 @@ func NewAdaptiveSizeThreePercentile() AdaptiveSize {
 	return AdaptiveSize(75)
 }
 
+func NewAdaptiveSizeZero() AdaptiveSize {
+	return AdaptiveSize(adaptiveSizeZero)
+}
+
 func NewAdaptiveSizeTwenty() AdaptiveSize {
 	return AdaptiveSize(2 * adaptiveSizeMin)
 }
