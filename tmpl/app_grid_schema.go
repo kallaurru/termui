@@ -50,7 +50,7 @@ func NewAppGridSchema(isRoot, asRows bool, sizes ...tui.AdaptiveSize) (AppGridSc
 	return ags, true
 }
 
-func (ags *AppGridSchema) AddItem(val interface{}) (ok bool) {
+func (ags *AppGridSchema) AddItem(val interface{}) bool {
 	if !ags.hasFreePlace() {
 		return false
 	}
@@ -59,8 +59,12 @@ func (ags *AppGridSchema) AddItem(val interface{}) (ok bool) {
 		ags.addGridItem(t)
 		return true
 	case AppGridSchema:
-		ags.cells = append(ags.cells, t)
-		return true
+		ok := t.SetDeep(ags.deep)
+		if ok {
+			ags.cells = append(ags.cells, t)
+			return true
+		}
+		return false
 	default:
 		return false
 	}
@@ -79,6 +83,16 @@ func (ags *AppGridSchema) Grid(xMin, yMin, xMax, yMax int) (*tui.Grid, bool) {
 	return grid, false
 }
 
+func (ags *AppGridSchema) SetDeep(ownerDeep int) bool {
+	var maxDeep = 2 // максимум три уровня вложенности
+	deep := ownerDeep + 1
+	if deep < maxDeep {
+		ags.deep = deep
+		return true
+	}
+	return false
+}
+
 func (ags *AppGridSchema) buildCell() []tui.GridItem {
 	var items []tui.GridItem
 	for _, value := range ags.cells {
@@ -86,8 +100,7 @@ func (ags *AppGridSchema) buildCell() []tui.GridItem {
 		case tui.GridItem:
 			items = append(items, t)
 		case AppGridSchema:
-			ags.cells = append(ags.cells, value)
-			return items
+			ags.cells = append(ags.cells, t.buildCell())
 		}
 	}
 	return items
@@ -117,4 +130,9 @@ func (ags *AppGridSchema) nextSize() (tui.AdaptiveSize, error) {
 		return tui.NewAdaptiveSizeZero(), errors.New("free space is over")
 	}
 	return ags.sizes[len(ags.cells)+1], nil
+}
+
+func (ags *AppGridSchema) hasNextLevel() bool {
+	var maxDeep int = 2 // максимум три уровня вложенности
+	return ags.deep < maxDeep
 }
