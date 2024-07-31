@@ -60,7 +60,7 @@ func main() {
 	p.Text = "<> This row has 3 columns\n<- Widgets can be stacked up like left side\n<- Stacked widgets are treated as a single widget"
 	p.Title = "Demonstration"
 
-	//grid := cAppBuildGrid(gs, sig)
+	grid := cAppBuildGrid(slg, lc, ls, p)
 
 	ui.Render(grid)
 
@@ -94,7 +94,7 @@ func main() {
 	}
 }
 
-func cAppBuildGrid(gs []*widgets.Gauge, slg *widgets.SparklineGroup) *ui.Grid {
+func cAppBuildGrid(slg *widgets.SparklineGroup, lc *widgets.Plot, ls *widgets.List, p *widgets.Paragraph) *ui.Grid {
 	root, ok := tmpl.NewAppGridSchema(true,
 		true,
 		ui.NewAdaptiveSizeTwoPercentile(),
@@ -103,6 +103,12 @@ func cAppBuildGrid(gs []*widgets.Gauge, slg *widgets.SparklineGroup) *ui.Grid {
 	if !ok {
 		panic(interface{}("not created schema"))
 	}
+	gs := buildGsSlice()
+	row0 := buildRow0Block(slg, lc)
+	row1 := buildRow1Block(gs, ls, p)
+
+	root.AddItem(row0)
+	root.AddItem(row1)
 	maxX, maxY := ui.TerminalDimensions()
 	grid, ok := root.Grid(0, 0, maxX, maxY)
 	if !ok {
@@ -111,12 +117,38 @@ func cAppBuildGrid(gs []*widgets.Gauge, slg *widgets.SparklineGroup) *ui.Grid {
 	return grid
 }
 
-func buildRow0Block() *tmpl.AppGridSchema {
+func buildRow0Block(slg *widgets.SparklineGroup, lc *widgets.Plot) *tmpl.AppGridSchema {
 	// создаем виджеты
+	schema, ok := tmpl.NewAppGridSchema(false,
+		false,
+		ui.NewAdaptiveSizeTwoPercentile(),
+		ui.NewAdaptiveSizeTwoPercentile())
+	if !ok {
+		panic(interface{}("not created schema"))
+	}
+
+	schema.AddItem(slg)
+	schema.AddItem(lc)
+
+	return schema
 }
 
-func buildRow1Block(gs []*widgets.Gauge) *tmpl.AppGridSchema {
+func buildRow1Block(gs []*widgets.Gauge, ls *widgets.List, p *widgets.Paragraph) *tmpl.AppGridSchema {
+	schema, ok := tmpl.NewAppGridSchema(false,
+		false,
+		ui.NewAdaptiveSizeFirstPercentile(),
+		ui.NewAdaptiveSizeFirstPercentile(),
+		ui.NewAdaptiveSizeTwoPercentile())
+	if !ok {
+		panic(interface{}("not created schema"))
+	}
+	schema.AddItem(ls)
+	for _, gsItem := range gs {
+		schema.AddItem(gsItem)
+	}
+	schema.AddItem(p)
 
+	return schema
 }
 
 func buildGsSlice() []*widgets.Gauge {

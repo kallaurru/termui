@@ -15,12 +15,12 @@ type AppGridSchema struct {
 	cells  []interface{} // AppGridSchema or GridItem
 }
 
-func NewAppGridSchema(isRoot, asRows bool, sizes ...tui.AdaptiveSize) (AppGridSchema, bool) {
+func NewAppGridSchema(isRoot, asRows bool, sizes ...tui.AdaptiveSize) (*AppGridSchema, bool) {
 	var (
 		full, deep int
 	)
 
-	ags := AppGridSchema{}
+	ags := &AppGridSchema{}
 	if len(sizes) == 0 {
 		return ags, false
 	}
@@ -129,7 +129,7 @@ func (ags *AppGridSchema) nextSize() (tui.AdaptiveSize, error) {
 	if !ags.hasFreePlace() {
 		return tui.NewAdaptiveSizeZero(), errors.New("free space is over")
 	}
-	return ags.sizes[len(ags.cells)+1], nil
+	return ags.sizes[len(ags.cells)], nil
 }
 
 func (ags *AppGridSchema) hasNextLevel() bool {
