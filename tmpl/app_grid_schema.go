@@ -58,7 +58,7 @@ func (ags *AppGridSchema) AddItem(val interface{}) bool {
 	case tui.Drawable:
 		ags.addGridItem(t)
 		return true
-	case AppGridSchema:
+	case *AppGridSchema:
 		ok := t.SetDeep(ags.deep)
 		if ok {
 			ags.cells = append(ags.cells, t)
@@ -86,7 +86,7 @@ func (ags *AppGridSchema) Grid(xMin, yMin, xMax, yMax int) (*tui.Grid, bool) {
 func (ags *AppGridSchema) SetDeep(ownerDeep int) bool {
 	var maxDeep = 2 // максимум три уровня вложенности
 	deep := ownerDeep + 1
-	if deep < maxDeep {
+	if deep <= maxDeep {
 		ags.deep = deep
 		return true
 	}
@@ -94,12 +94,14 @@ func (ags *AppGridSchema) SetDeep(ownerDeep int) bool {
 }
 
 func (ags *AppGridSchema) buildCell() []tui.GridItem {
+	// todo функционал не работает как ожидается. Нужно переписать, не правильное накопление items.
+	// Items - теряется в рекурсии.
 	var items []tui.GridItem
 	for _, value := range ags.cells {
 		switch t := value.(type) {
 		case tui.GridItem:
 			items = append(items, t)
-		case AppGridSchema:
+		case *AppGridSchema:
 			ags.cells = append(ags.cells, t.buildCell())
 		}
 	}

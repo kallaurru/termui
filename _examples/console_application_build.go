@@ -129,6 +129,7 @@ func buildRow0Block(slg *widgets.SparklineGroup, lc *widgets.Plot) *tmpl.AppGrid
 
 	schema.AddItem(slg)
 	schema.AddItem(lc)
+	schema.SetDeep(0)
 
 	return schema
 }
@@ -139,13 +140,28 @@ func buildRow1Block(gs []*widgets.Gauge, ls *widgets.List, p *widgets.Paragraph)
 		ui.NewAdaptiveSizeFirstPercentile(),
 		ui.NewAdaptiveSizeFirstPercentile(),
 		ui.NewAdaptiveSizeTwoPercentile())
+
+	schema.SetDeep(0)
+
 	if !ok {
 		panic(interface{}("not created schema"))
 	}
+
 	schema.AddItem(ls)
-	for _, gsItem := range gs {
-		schema.AddItem(gsItem)
+	midRowSchema, ok := tmpl.NewAppGridSchema(false,
+		true,
+		ui.NewAdaptiveSize(30),
+		ui.NewAdaptiveSize(30),
+		ui.NewAdaptiveSize(40))
+
+	midRowSchema.SetDeep(1)
+	if !ok {
+		panic(interface{}("not created schema"))
 	}
+	for _, gsItem := range gs {
+		midRowSchema.AddItem(gsItem)
+	}
+	schema.AddItem(midRowSchema)
 	schema.AddItem(p)
 
 	return schema
