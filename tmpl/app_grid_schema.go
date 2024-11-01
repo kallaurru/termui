@@ -77,7 +77,7 @@ func (ags *AppGridSchema) Grid(xMin, yMin, xMax, yMax int) (*tui.Grid, bool) {
 		return grid, false
 	}
 	grid.SetRect(xMin, yMin, xMax, yMax)
-	items := ags.buildCell()
+	items := ags.buildCells()
 	grid.Set(items)
 
 	return grid, false
@@ -93,8 +93,9 @@ func (ags *AppGridSchema) SetDeep(ownerDeep int) bool {
 	return false
 }
 
-func (ags *AppGridSchema) buildCell() []tui.GridItem {
-	// todo функционал не работает как ожидается. Нужно переписать, не правильное накопление items.
+// если это root схема, возвращаем по количеству ячеек в ней
+// другие уровни вложенности должны возвращать один GridItem
+func (ags *AppGridSchema) buildCells() []tui.GridItem {
 	// Items - теряется в рекурсии.
 	var items []tui.GridItem
 	for _, value := range ags.cells {
@@ -102,9 +103,10 @@ func (ags *AppGridSchema) buildCell() []tui.GridItem {
 		case tui.GridItem:
 			items = append(items, t)
 		case *AppGridSchema:
-			ags.cells = append(ags.cells, t.buildCell())
+			items = append(items, t.buildCells()...)
 		}
 	}
+
 	return items
 }
 
