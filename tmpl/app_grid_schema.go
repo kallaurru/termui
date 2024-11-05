@@ -76,11 +76,32 @@ func (ags *AppGridSchema) Grid(xMin, yMin, xMax, yMax int) (*tui.Grid, bool) {
 	if ags.deep != 0 {
 		return grid, false
 	}
-	grid.SetRect(xMin, yMin, xMax, yMax)
-	items := ags.buildCells()
-	grid.Set(items)
+	var items []interface{}
 
-	return grid, false
+	grid.SetRect(xMin, yMin, xMax, yMax)
+
+	for i := 0; i < len(ags.cells); i++ {
+		value := ags.cells[i]
+		switch t := value.(type) {
+		case tui.GridItem:
+			items = append(items, t)
+		case *AppGridSchema:
+			item := t.buildCell(ags.sizes[i])
+
+			items = append(items, t.buildCell(ags.sizes[i]))
+		}
+
+	}
+
+	if ags.asRows {
+		item = tui.NewRow(size.FloatSize(), localItems...)
+	} else {
+		item = tui.NewCol(size.FloatSize(), localItems...)
+	}
+	items := ags.buildCell()
+	grid.Set(items...)
+
+	return grid, true
 }
 
 func (ags *AppGridSchema) SetDeep(ownerDeep int) bool {
@@ -93,21 +114,26 @@ func (ags *AppGridSchema) SetDeep(ownerDeep int) bool {
 	return false
 }
 
-// если это root схема, возвращаем по количеству ячеек в ней
-// другие уровни вложенности должны возвращать один GridItem
-func (ags *AppGridSchema) buildCells() []tui.GridItem {
-	// Items - теряется в рекурсии.
-	var items []tui.GridItem
-	for _, value := range ags.cells {
+func (ags *AppGridSchema) buildCell(size tui.AdaptiveSize) tui.GridItem {
+	var item tui.GridItem
+	var localItems []interface{}
+
+	for i := 0; i < len(ags.cells); i++ {
+		value := ags.cells[i]
 		switch t := value.(type) {
 		case tui.GridItem:
-			items = append(items, t)
+			localItems = append(localItems, t)
 		case *AppGridSchema:
-			items = append(items, t.buildCells()...)
+			localItems = append(localItems, t.buildCell(ags.sizes[i]))
 		}
 	}
 
-	return items
+	if ags.asRows {
+		item = tui.NewRow(size.FloatSize(), localItems...)
+	} else {
+		item = tui.NewCol(size.FloatSize(), localItems...)
+	}
+	return item
 }
 
 func (ags *AppGridSchema) hasFreePlace() bool {
