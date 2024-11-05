@@ -76,20 +76,32 @@ func (ags *AppGridSchema) Grid(xMin, yMin, xMax, yMax int) (*tui.Grid, bool) {
 	if ags.deep != 0 {
 		return grid, false
 	}
+
 	var items []interface{}
 
 	grid.SetRect(xMin, yMin, xMax, yMax)
 
 	for i := 0; i < len(ags.cells); i++ {
 		value := ags.cells[i]
-		switch t := value.(type) {
-		case tui.GridItem:
-			items = append(items, t)
-		case *AppGridSchema:
-			items = append(items, t.buildCell(ags.sizes[i]))
+		if itemOfType, ok := value.(tui.GridItem); ok {
+			if ags.asRows {
+				items = append(items, tui.NewRow(ags.sizes[i].FloatSize(), itemOfType))
+			} else {
+				items = append(items, tui.NewCol(ags.sizes[i].FloatSize(), itemOfType))
+			}
+			continue
 		}
 
+		if itemOfType, ok := value.(*AppGridSchema); ok {
+			inSchemaItems := itemOfType.compileSchema()
+			if ags.asRows {
+				items = append(items, tui.NewRow(ags.sizes[i].FloatSize(), inSchemaItems...))
+			} else {
+				items = append(items, tui.NewCol(ags.sizes[i].FloatSize(), inSchemaItems...))
+			}
+		}
 	}
+
 	grid.Set(items...)
 
 	return grid, true
@@ -105,26 +117,29 @@ func (ags *AppGridSchema) SetDeep(ownerDeep int) bool {
 	return false
 }
 
-func (ags *AppGridSchema) buildCell(size tui.AdaptiveSize) tui.GridItem {
-	var item tui.GridItem
+// вариант когда нужно все вложенные в схему схемы и/или компоненты собрать в один массив
+// в указанном порядке
+func (ags *AppGridSchema) compileSchema() []interface{} {
 	var localItems []interface{}
 
 	for i := 0; i < len(ags.cells); i++ {
 		value := ags.cells[i]
-		switch t := value.(type) {
-		case tui.GridItem:
-			localItems = append(localItems, t)
-		case *AppGridSchema:
-			localItems = append(localItems, t.buildCell(ags.sizes[i]))
+		if itemType, ok := value.(tui.GridItem); ok {
+			localItems = append(localItems, itemType)
+			continue
+		}
+
+		if itemType, ok := value.(*AppGridSchema); ok {
+			schemaItems := itemType.compileSchema()
+			if ags.asRows {
+				localItems = append(localItems, tui.NewRow(ags.sizes[i].FloatSize(), schemaItems...))
+				continue
+			}
+			localItems = append(localItems, tui.NewCol(ags.sizes[i].FloatSize(), schemaItems...))
 		}
 	}
 
-	if ags.asRows {
-		item = tui.NewRow(size.FloatSize(), localItems...)
-	} else {
-		item = tui.NewCol(size.FloatSize(), localItems...)
-	}
-	return item
+	return localItems
 }
 
 func (ags *AppGridSchema) hasFreePlace() bool {
@@ -139,9 +154,9 @@ func (ags *AppGridSchema) addGridItem(w tui.Drawable) {
 		return
 	}
 	if ags.asRows {
-		item = tui.NewRow(nextSize.FloatSize(), w)
-	} else {
 		item = tui.NewCol(nextSize.FloatSize(), w)
+	} else {
+		item = tui.NewRow(nextSize.FloatSize(), w)
 	}
 	ags.cells = append(ags.cells, item)
 }

@@ -120,7 +120,7 @@ func cAppBuildGrid(slg *widgets.SparklineGroup, lc *widgets.Plot, ls *widgets.Li
 func buildRow0Block(slg *widgets.SparklineGroup, lc *widgets.Plot) *tmpl.AppGridSchema {
 	// создаем виджеты
 	schema, ok := tmpl.NewAppGridSchema(false,
-		false,
+		true,
 		ui.NewAdaptiveSizeTwoPercentile(),
 		ui.NewAdaptiveSizeTwoPercentile())
 	if !ok {
