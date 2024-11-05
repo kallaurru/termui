@@ -86,19 +86,10 @@ func (ags *AppGridSchema) Grid(xMin, yMin, xMax, yMax int) (*tui.Grid, bool) {
 		case tui.GridItem:
 			items = append(items, t)
 		case *AppGridSchema:
-			item := t.buildCell(ags.sizes[i])
-
 			items = append(items, t.buildCell(ags.sizes[i]))
 		}
 
 	}
-
-	if ags.asRows {
-		item = tui.NewRow(size.FloatSize(), localItems...)
-	} else {
-		item = tui.NewCol(size.FloatSize(), localItems...)
-	}
-	items := ags.buildCell()
 	grid.Set(items...)
 
 	return grid, true
