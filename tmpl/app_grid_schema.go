@@ -6,13 +6,13 @@ import (
 )
 
 // AppGridSchema - компонент позволяющий сформировать сетку виджетов (tui.Grid) для терминала
-// Каждая схема создает или несколько колонок в одной строке или несколько строк в колонке
+// Каждая схема компилируется или в строку или в колонку
 type AppGridSchema struct {
-	items  int
-	deep   int // 0 значит корень // -1 = адаптивный уровень от первого до N
-	asRows bool
-	sizes  []tui.AdaptiveSize
-	cells  []interface{} // AppGridSchema or GridItem
+	items int
+	deep  int // 0 значит корень // -1 = адаптивный уровень от первого до N
+	asRow bool
+	sizes []tui.AdaptiveSize
+	cells []interface{} // AppGridSchema or GridItem
 }
 
 func NewAppGridSchema(isRoot, asRows bool, sizes ...tui.AdaptiveSize) (*AppGridSchema, bool) {
@@ -41,7 +41,7 @@ func NewAppGridSchema(isRoot, asRows bool, sizes ...tui.AdaptiveSize) (*AppGridS
 		deep = -1
 	}
 
-	ags.asRows = asRows
+	ags.asRow = asRows
 	ags.items = len(sizes)
 	ags.deep = deep
 	ags.sizes = tmpSizes
@@ -84,7 +84,7 @@ func (ags *AppGridSchema) Grid(xMin, yMin, xMax, yMax int) (*tui.Grid, bool) {
 	for i := 0; i < len(ags.cells); i++ {
 		value := ags.cells[i]
 		if itemOfType, ok := value.(tui.GridItem); ok {
-			if ags.asRows {
+			if ags.asRow {
 				items = append(items, tui.NewRow(ags.sizes[i].FloatSize(), itemOfType))
 			} else {
 				items = append(items, tui.NewCol(ags.sizes[i].FloatSize(), itemOfType))
@@ -94,7 +94,7 @@ func (ags *AppGridSchema) Grid(xMin, yMin, xMax, yMax int) (*tui.Grid, bool) {
 
 		if itemOfType, ok := value.(*AppGridSchema); ok {
 			inSchemaItems := itemOfType.compileSchema()
-			if ags.asRows {
+			if ags.asRow {
 				items = append(items, tui.NewRow(ags.sizes[i].FloatSize(), inSchemaItems...))
 			} else {
 				items = append(items, tui.NewCol(ags.sizes[i].FloatSize(), inSchemaItems...))
@@ -131,7 +131,7 @@ func (ags *AppGridSchema) compileSchema() []interface{} {
 
 		if itemType, ok := value.(*AppGridSchema); ok {
 			schemaItems := itemType.compileSchema()
-			if ags.asRows {
+			if ags.asRow {
 				localItems = append(localItems, tui.NewRow(ags.sizes[i].FloatSize(), schemaItems...))
 				continue
 			}
@@ -153,7 +153,7 @@ func (ags *AppGridSchema) addGridItem(w tui.Drawable) {
 	if err != nil {
 		return
 	}
-	if ags.asRows {
+	if ags.asRow {
 		item = tui.NewCol(nextSize.FloatSize(), w)
 	} else {
 		item = tui.NewRow(nextSize.FloatSize(), w)
