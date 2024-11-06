@@ -110,10 +110,8 @@ func cAppBuildGrid(slg *widgets.SparklineGroup, lc *widgets.Plot, ls *widgets.Li
 	root.AddItem(row0)
 	root.AddItem(row1)
 	maxX, maxY := ui.TerminalDimensions()
-	grid, ok := root.Grid(0, 0, maxX, maxY)
-	if !ok {
-		panic(interface{}("not built grid"))
-	}
+	grid := tmpl.BuildGrid(0, 0, maxX, maxY, row0, row1)
+
 	return grid
 }
 

@@ -5,6 +5,21 @@ import (
 	tui "github.com/kallaurru/termui/v3"
 )
 
+func BuildGrid(xMin, yMin, xMax, yMax int, schemas ...*AppGridSchema) *tui.Grid {
+	grid := tui.NewGrid()
+	grid.SetRect(xMin, yMin, xMax, yMax)
+	if len(schemas) == 0 {
+		return grid
+	}
+	items := make([]interface{}, len(schemas), len(schemas))
+	for _, schema := range schemas {
+		items = append(items, schema)
+	}
+	grid.Set(items...)
+
+	return grid
+}
+
 // AppGridSchema - компонент позволяющий сформировать сетку виджетов (tui.Grid) для терминала
 // Каждая схема компилируется или в строку или в колонку
 type AppGridSchema struct {
