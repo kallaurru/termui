@@ -5,15 +5,19 @@ import (
 	tui "github.com/kallaurru/termui/v3"
 )
 
+// BuildGrid Добавляем только корневые элементы *AppGridSchema
 func BuildGrid(xMin, yMin, xMax, yMax int, schemas ...*AppGridSchema) *tui.Grid {
 	grid := tui.NewGrid()
 	grid.SetRect(xMin, yMin, xMax, yMax)
 	if len(schemas) == 0 {
 		return grid
 	}
-	items := make([]interface{}, len(schemas), len(schemas))
+	items := make([]interface{}, 0, len(schemas))
 	for _, schema := range schemas {
-		items = append(items, schema)
+		if schema.deep != 0 {
+			continue
+		}
+		items = append(items, schema.compile())
 	}
 	grid.Set(items...)
 
@@ -130,6 +134,28 @@ func (ags *AppGridSchema) SetDeep(ownerDeep int) bool {
 		return true
 	}
 	return false
+}
+
+func (ags *AppGridSchema) compile(size tui.AdaptiveSize) tui.GridItem {
+	var localItems []interface{}
+
+	for i := 0; i < len(ags.cells); i++ {
+		value := ags.cells[i]
+		if itemType, ok := value.(tui.GridItem); ok {
+			localItems = append(localItems, itemType)
+			continue
+		}
+
+		if itemType, ok := value.(*AppGridSchema); ok {
+			schemaGridItem := itemType.compile(ags.sizes[i])
+			localItems = append(localItems, schemaGridItem)
+		}
+	}
+	if ags.asRow {
+		return tui.NewRow(size.FloatSize(), localItems...)
+	}
+
+	return tui.NewCol(size.FloatSize(), localItems...)
 }
 
 // вариант когда нужно все вложенные в схему схемы и/или компоненты собрать в один массив
