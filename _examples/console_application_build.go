@@ -95,30 +95,21 @@ func main() {
 }
 
 func cAppBuildGrid(slg *widgets.SparklineGroup, lc *widgets.Plot, ls *widgets.List, p *widgets.Paragraph) *ui.Grid {
-	root, ok := tmpl.NewAppGridSchema(true,
-		true,
-		ui.NewAdaptiveSizeTwoPercentile(),
-		ui.NewAdaptiveSizeTwoPercentile())
-
-	if !ok {
-		panic(interface{}("not created schema"))
-	}
 	gs := buildGsSlice()
-	row0 := buildRow0Block(slg, lc)
-	row1 := buildRow1Block(gs, ls, p)
+	rootRow0 := buildRow0Block(slg, lc)
+	rootRow1 := buildRow1Block(gs, ls, p)
 
-	root.AddItem(row0)
-	root.AddItem(row1)
 	maxX, maxY := ui.TerminalDimensions()
-	grid := tmpl.BuildGrid(0, 0, maxX, maxY, row0, row1)
+	grid := tmpl.BuildGrid(0, 0, maxX, maxY, rootRow0, rootRow1)
 
 	return grid
 }
 
 func buildRow0Block(slg *widgets.SparklineGroup, lc *widgets.Plot) *tmpl.AppGridSchema {
 	// создаем виджеты
-	schema, ok := tmpl.NewAppGridSchema(false,
+	schema, ok := tmpl.NewAppGridSchema(true,
 		true,
+		ui.NewAdaptiveSizeTwoPercentile(),
 		ui.NewAdaptiveSizeTwoPercentile(),
 		ui.NewAdaptiveSizeTwoPercentile())
 	if !ok {
@@ -127,19 +118,16 @@ func buildRow0Block(slg *widgets.SparklineGroup, lc *widgets.Plot) *tmpl.AppGrid
 
 	schema.AddItem(slg)
 	schema.AddItem(lc)
-	schema.SetDeep(0)
 
 	return schema
 }
 
 func buildRow1Block(gs []*widgets.Gauge, ls *widgets.List, p *widgets.Paragraph) *tmpl.AppGridSchema {
-	schema, ok := tmpl.NewAppGridSchema(false,
-		false,
+	schema, ok := tmpl.NewAppGridSchema(true,
+		true,
 		ui.NewAdaptiveSizeFirstPercentile(),
 		ui.NewAdaptiveSizeFirstPercentile(),
 		ui.NewAdaptiveSizeTwoPercentile())
-
-	schema.SetDeep(0)
 
 	if !ok {
 		panic(interface{}("not created schema"))
@@ -152,7 +140,7 @@ func buildRow1Block(gs []*widgets.Gauge, ls *widgets.List, p *widgets.Paragraph)
 		ui.NewAdaptiveSize(30),
 		ui.NewAdaptiveSize(40))
 
-	midRowSchema.SetDeep(1)
+	midRowSchema.SetDeep(0)
 	if !ok {
 		panic(interface{}("not created schema"))
 	}

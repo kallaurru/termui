@@ -17,7 +17,7 @@ func BuildGrid(xMin, yMin, xMax, yMax int, schemas ...*AppGridSchema) *tui.Grid 
 		if schema.deep != 0 {
 			continue
 		}
-		items = append(items, schema.compile())
+		items = append(items, schema.CompileSchema())
 	}
 	grid.Set(items...)
 
@@ -27,32 +27,33 @@ func BuildGrid(xMin, yMin, xMax, yMax int, schemas ...*AppGridSchema) *tui.Grid 
 // AppGridSchema - компонент позволяющий сформировать сетку виджетов (tui.Grid) для терминала
 // Каждая схема компилируется или в строку или в колонку
 type AppGridSchema struct {
-	items int
-	deep  int // 0 значит корень // -1 = адаптивный уровень от первого до N
+	size  tui.AdaptiveSize // размер элемента в который будет скомпилирована схема
+	items int              // количество элементов в схеме
+	deep  int              // 0 значит корень // -1 = адаптивный уровень от первого до N
 	asRow bool
 	sizes []tui.AdaptiveSize
 	cells []interface{} // AppGridSchema or GridItem
 }
 
-func NewAppGridSchema(isRoot, asRows bool, sizes ...tui.AdaptiveSize) (*AppGridSchema, bool) {
+func NewAppGridSchema(isRoot, asRows bool, size tui.AdaptiveSize, itemsSize ...tui.AdaptiveSize) (*AppGridSchema, bool) {
 	var (
 		full, deep int
 	)
 
 	ags := &AppGridSchema{}
-	if len(sizes) == 0 {
+	if len(itemsSize) == 0 {
 		return ags, false
 	}
-	for _, s := range sizes {
+	for _, s := range itemsSize {
 		full += s.ToInt()
 	}
 	if full > tui.AdaptiveSizeMaxInt {
 		return ags, false
 	}
 
-	tmpSizes := make([]tui.AdaptiveSize, 0, len(sizes))
-	tmpSizes = append(tmpSizes, sizes...)
-	cells := make([]interface{}, 0, len(sizes))
+	tmpSizes := make([]tui.AdaptiveSize, 0, len(itemsSize))
+	tmpSizes = append(tmpSizes, itemsSize...)
+	cells := make([]interface{}, 0, len(itemsSize))
 
 	if isRoot {
 		deep = 0
@@ -61,10 +62,11 @@ func NewAppGridSchema(isRoot, asRows bool, sizes ...tui.AdaptiveSize) (*AppGridS
 	}
 
 	ags.asRow = asRows
-	ags.items = len(sizes)
+	ags.items = len(itemsSize)
 	ags.deep = deep
 	ags.sizes = tmpSizes
 	ags.cells = cells
+	ags.size = size
 
 	return ags, true
 }
@@ -90,42 +92,6 @@ func (ags *AppGridSchema) AddItem(val interface{}) bool {
 
 }
 
-func (ags *AppGridSchema) Grid(xMin, yMin, xMax, yMax int) (*tui.Grid, bool) {
-	grid := tui.NewGrid()
-	if ags.deep != 0 {
-		return grid, false
-	}
-
-	var items []interface{}
-
-	grid.SetRect(xMin, yMin, xMax, yMax)
-
-	for i := 0; i < len(ags.cells); i++ {
-		value := ags.cells[i]
-		if itemOfType, ok := value.(tui.GridItem); ok {
-			if ags.asRow {
-				items = append(items, tui.NewRow(ags.sizes[i].FloatSize(), itemOfType))
-			} else {
-				items = append(items, tui.NewCol(ags.sizes[i].FloatSize(), itemOfType))
-			}
-			continue
-		}
-
-		if itemOfType, ok := value.(*AppGridSchema); ok {
-			inSchemaItems := itemOfType.compileSchema()
-			if ags.asRow {
-				items = append(items, tui.NewRow(ags.sizes[i].FloatSize(), inSchemaItems...))
-			} else {
-				items = append(items, tui.NewCol(ags.sizes[i].FloatSize(), inSchemaItems...))
-			}
-		}
-	}
-
-	grid.Set(items...)
-
-	return grid, true
-}
-
 func (ags *AppGridSchema) SetDeep(ownerDeep int) bool {
 	var maxDeep = 2 // максимум три уровня вложенности
 	deep := ownerDeep + 1
@@ -136,7 +102,7 @@ func (ags *AppGridSchema) SetDeep(ownerDeep int) bool {
 	return false
 }
 
-func (ags *AppGridSchema) compile(size tui.AdaptiveSize) tui.GridItem {
+func (ags *AppGridSchema) CompileSchema() tui.GridItem {
 	var localItems []interface{}
 
 	for i := 0; i < len(ags.cells); i++ {
@@ -147,15 +113,15 @@ func (ags *AppGridSchema) compile(size tui.AdaptiveSize) tui.GridItem {
 		}
 
 		if itemType, ok := value.(*AppGridSchema); ok {
-			schemaGridItem := itemType.compile(ags.sizes[i])
+			schemaGridItem := itemType.CompileSchema()
 			localItems = append(localItems, schemaGridItem)
 		}
 	}
 	if ags.asRow {
-		return tui.NewRow(size.FloatSize(), localItems...)
+		return tui.NewRow(ags.size.FloatSize(), localItems...)
 	}
 
-	return tui.NewCol(size.FloatSize(), localItems...)
+	return tui.NewCol(ags.size.FloatSize(), localItems...)
 }
 
 // вариант когда нужно все вложенные в схему схемы и/или компоненты собрать в один массив
