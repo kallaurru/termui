@@ -125,6 +125,7 @@ func buildRow0Block(slg *widgets.SparklineGroup, lc *widgets.Plot) *tmpl.AppGrid
 func buildRow1Block(gs []*widgets.Gauge, ls *widgets.List, p *widgets.Paragraph) *tmpl.AppGridSchema {
 	schema, ok := tmpl.NewAppGridSchema(true,
 		true,
+		ui.NewAdaptiveSizeTwoPercentile(),
 		ui.NewAdaptiveSizeFirstPercentile(),
 		ui.NewAdaptiveSizeFirstPercentile(),
 		ui.NewAdaptiveSizeTwoPercentile())
@@ -135,7 +136,8 @@ func buildRow1Block(gs []*widgets.Gauge, ls *widgets.List, p *widgets.Paragraph)
 
 	schema.AddItem(ls)
 	midRowSchema, ok := tmpl.NewAppGridSchema(false,
-		true,
+		false,
+		ui.NewAdaptiveSizeFirstPercentile(),
 		ui.NewAdaptiveSize(30),
 		ui.NewAdaptiveSize(30),
 		ui.NewAdaptiveSize(40))

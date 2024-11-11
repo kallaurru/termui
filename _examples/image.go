@@ -2,8 +2,6 @@
 // Use of this source code is governed by a MIT license that can
 // be found in the LICENSE file.
 
-// +build ignore
-
 package main
 
 import (
@@ -18,8 +16,8 @@ import (
 	"os"
 	"strings"
 
-	ui "github.com/gizak/termui/v3"
-	"github.com/gizak/termui/v3/widgets"
+	ui "github.com/kallaurru/termui/v3"
+	"github.com/kallaurru/termui/v3/widgets"
 )
 
 func main() {
@@ -49,7 +47,7 @@ func main() {
 	defer ui.Close()
 
 	img := widgets.NewImage(nil)
-	img.SetRect(0, 0, 100, 50)
+	img.SetRect(20, 9, 50, 25)
 	index := 0
 	render := func() {
 		img.Image = images[index]

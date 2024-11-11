@@ -1,5 +1,3 @@
-// +build ignore
-
 package main
 
 import (
@@ -9,8 +7,8 @@ import (
 	"math/rand"
 	"time"
 
-	ui "github.com/gizak/termui/v3"
-	"github.com/gizak/termui/v3/widgets"
+	ui "github.com/kallaurru/termui/v3"
+	"github.com/kallaurru/termui/v3/widgets"
 )
 
 var run = true
