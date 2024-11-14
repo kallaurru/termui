@@ -1,5 +1,6 @@
 package main
 
+// @deprecated
 import (
 	"errors"
 	"fmt"
