@@ -3,6 +3,7 @@ package main
 import (
 	"image"
 	"log"
+	"time"
 
 	. "github.com/kallaurru/termui/v3"
 	"github.com/kallaurru/termui/v3/widgets"
@@ -35,6 +36,8 @@ func main() {
 				lab := "Taked"
 				db.SetButtonLabel(lab)
 				Render(db)
+				time.Sleep(1 * time.Second)
+				return
 
 			}
 		}
