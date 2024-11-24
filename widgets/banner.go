@@ -26,7 +26,7 @@ func NewBanner() *Banner {
 	return banner
 }
 
-func (b *Banner) UploadFromFile(filename string) error {
+func (b *Banner) SetBannerData(filename string, l, h int) error {
 	return nil
 }
 

@@ -1,11 +1,17 @@
 module github.com/kallaurru/termui/v3
 
-go 1.15
+go 1.21
 
 require (
 	github.com/gizak/termui/v3 v3.1.0
-	github.com/mattn/go-runewidth v0.0.2
-	github.com/mitchellh/go-wordwrap v0.0.0-20150314170334-ad45545899c7
-	github.com/nsf/termbox-go v0.0.0-20190121233118-02980233997d
+	github.com/mattn/go-runewidth v0.0.16
+	github.com/mitchellh/go-wordwrap v1.0.1
+	github.com/nsf/termbox-go v1.1.1
 	github.com/satori/go.uuid v1.2.0
+)
+
+require (
+	github.com/kallaurru/gocext v0.0.0-20241124141652-dc773c3bbab9 // indirect
+	github.com/rivo/uniseg v0.4.7 // indirect
+	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 )
