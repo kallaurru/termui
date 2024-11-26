@@ -1,6 +1,6 @@
 module github.com/kallaurru/termui/v3
 
-go 1.21
+go 1.23.2
 
 require (
 	github.com/gizak/termui/v3 v3.1.0
