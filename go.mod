@@ -11,7 +11,6 @@ require (
 )
 
 require (
-	github.com/kallaurru/gocext v0.0.0-20241124141652-dc773c3bbab9 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 )

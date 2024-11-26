@@ -1,7 +1,5 @@
 github.com/gizak/termui/v3 v3.1.0 h1:ZZmVDgwHl7gR7elfKf1xc4IudXZ5qqfDh4wExk4Iajc=
 github.com/gizak/termui/v3 v3.1.0/go.mod h1:bXQEBkJpzxUAKf0+xq9MSWAvWZlE7c+aidmyFlkYTrY=
-github.com/kallaurru/gocext v0.0.0-20241124141652-dc773c3bbab9 h1:nEy1RLnvV2akBom+6BJNTKFw2r4uD6Nn+4jEfOqLwOo=
-github.com/kallaurru/gocext v0.0.0-20241124141652-dc773c3bbab9/go.mod h1:4Op4WqSWl78XJQlfb4yu4YZ1yUs5ZcsoDy934WR80GM=
 github.com/kr/pretty v0.2.1 h1:Fmg33tUaq4/8ym9TJN1x7sLJnHVwhP33CNkpYV/7rwI=
 github.com/kr/pretty v0.2.1/go.mod h1:ipq/a2n7PKx3OHsz4KJII5eveXtPO4qwEXGdVfWzfnI=
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
